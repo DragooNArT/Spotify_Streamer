@@ -1,9 +1,10 @@
 package com.example.dragoonart.spotifystreamer;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -11,6 +12,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ListView list = (ListView) this.findViewById(R.id.artists_list);
+        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(list.getContext(),android.R.layout.activity_list_item,new String[]{"la","bla"});
+       // list.setAdapter(adapter);
     }
 
     @Override
