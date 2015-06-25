@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.dragoonart.spotifystreamer.adapters.ArtistRowView;
+import com.example.dragoonart.spotifystreamer.helpers.ListViewHelper;
 import com.example.dragoonart.spotifystreamer.listeners.ArtistListClickListener;
 import com.example.dragoonart.spotifystreamer.tasks.FetchArtists;
 
@@ -37,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements TextView.OnEditor
             fetchArtistsTask.execute();
             InputMethodManager imm = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
-
             return true;
         }
         return false;
@@ -58,15 +58,14 @@ public class MainActivity extends AppCompatActivity implements TextView.OnEditor
         return true;
     }
 
-    private void displayEmptyList() {
 
-    }
 
     public void renderList(List<Artist> artists) {
-        if (artists == null) {
-            displayEmptyList();
+
+        ListView artistList = (ListView) findViewById(R.id.artist_list);
+        if (artists == null || artists.isEmpty()) {
+            ListViewHelper.displayEmptyList(this,artistList,"No Artists found");
         } else {
-            ListView artistList = (ListView) findViewById(R.id.artist_list);
             ArtistRowView rowView = new ArtistRowView(getBaseContext(), artists.toArray(new Artist[artists.size()]));
             artistList.setAdapter(rowView);
             ArtistListClickListener listener = new ArtistListClickListener(this, artists);
