@@ -18,7 +18,8 @@ public class ListViewHelper {
 
     public static void displayEmptyList(AppCompatActivity activity, ListView list,String textToDisplay) {
         String[] text = new String[]{textToDisplay};
-        ArrayAdapter adapter = new ArrayAdapter(activity.getBaseContext(), R.layout.notification_media_action,text);
+        ArrayAdapter adapter = new ArrayAdapter(list.getContext(), R.layout.list_plain_text,text);
         list.setAdapter(adapter);
+        list.setClickable(false);
     }
 }

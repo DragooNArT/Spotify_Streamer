@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements TextView.OnEditor
     }
 
     public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE) {
+        if (actionId == EditorInfo.IME_ACTION_DONE || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
             FetchArtists fetchArtistsTask = new FetchArtists(textView.getText().toString(), this);
             fetchArtistsTask.execute();
             InputMethodManager imm = (InputMethodManager) textView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
