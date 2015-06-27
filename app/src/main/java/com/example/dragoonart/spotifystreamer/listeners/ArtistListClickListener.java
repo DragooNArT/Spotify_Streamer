@@ -6,10 +6,9 @@ import android.widget.AdapterView;
 
 import com.example.dragoonart.spotifystreamer.ArtistTracksActivity;
 import com.example.dragoonart.spotifystreamer.MainActivity;
+import com.example.dragoonart.spotifystreamer.beans.DiscoveredArtist;
 
 import java.util.List;
-
-import kaaes.spotify.webapi.android.models.Artist;
 
 /**
  * Created by DragooNART on 6/25/2015.
@@ -17,18 +16,19 @@ import kaaes.spotify.webapi.android.models.Artist;
 public class ArtistListClickListener implements AdapterView.OnItemClickListener {
 
     private MainActivity activity;
-    private List<Artist> artists;
+    private List<DiscoveredArtist> artists;
 
-    public ArtistListClickListener(MainActivity activity, List<Artist> artists) {
+    public ArtistListClickListener(MainActivity activity, List<DiscoveredArtist> artists) {
         this.activity = activity;
         this.artists = artists;
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Artist artist = artists.get(position);
+        DiscoveredArtist artist = artists.get(position);
         Intent artistActivity = new Intent(activity, ArtistTracksActivity.class);
-        artistActivity.putExtra(Intent.EXTRA_TEXT, artist.id);
+        artistActivity.putExtra(Intent.EXTRA_TEXT, artist.getId());
+        artistActivity.putExtra(MainActivity.EXTRA_ARTIST_NAME_KEY, artist.getName());
         activity.startActivity(artistActivity);
     }
 }

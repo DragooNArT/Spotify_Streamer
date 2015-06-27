@@ -9,18 +9,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dragoonart.spotifystreamer.R;
+import com.example.dragoonart.spotifystreamer.beans.DiscoveredArtist;
 import com.squareup.picasso.Picasso;
-
-import kaaes.spotify.webapi.android.models.Artist;
 
 /**
  * Created by DragooNART on 6/25/2015.
  */
-public class ArtistRowView extends ArrayAdapter<Artist> {
+public class ArtistRowView extends ArrayAdapter<DiscoveredArtist> {
     private final Context context;
-    private final Artist[] values;
+    private final DiscoveredArtist[] values;
 
-    public ArtistRowView(Context context, Artist[] values) {
+    public ArtistRowView(Context context, DiscoveredArtist[] values) {
         super(context, R.layout.artist_row, values);
         this.context = context;
         this.values = values;
@@ -33,11 +32,11 @@ public class ArtistRowView extends ArrayAdapter<Artist> {
         View rowView = inflater.inflate(R.layout.artist_row, parent, false);
         TextView textView = (TextView) rowView.findViewById(R.id.artist_name);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.artist_icon);
-        Artist artist = values[position];
-        textView.setText(artist.name);
+        DiscoveredArtist artist = values[position];
+        textView.setText(artist.getName());
         // Change the icon for Windows and iPhone
-        if (!artist.images.isEmpty()) {
-            Picasso.with(context).load(artist.images.get(0).url).into(imageView);
+        if (artist.getImageLoc() != null) {
+            Picasso.with(context).load(artist.getImageLoc()).into(imageView);
         } else {
             Picasso.with(context).load("http://prozrachniplanini.org/img/2/avatar-profile.png").into(imageView);
         }

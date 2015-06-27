@@ -9,18 +9,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dragoonart.spotifystreamer.R;
+import com.example.dragoonart.spotifystreamer.beans.ArtistTrack;
 import com.squareup.picasso.Picasso;
-
-import kaaes.spotify.webapi.android.models.Track;
 
 /**
  * Created by DragooNART on 6/25/2015.
  */
-public class ArtistTrackView extends ArrayAdapter<Track> {
+public class ArtistTrackView extends ArrayAdapter<ArtistTrack> {
     private final Context context;
-    private final Track[] values;
+    private final ArtistTrack[] values;
 
-    public ArtistTrackView(Context context, Track[] values) {
+    public ArtistTrackView(Context context, ArtistTrack[] values) {
         super(context, R.layout.artist_track_row, values);
         this.context = context;
         this.values = values;
@@ -34,12 +33,12 @@ public class ArtistTrackView extends ArrayAdapter<Track> {
         TextView trackName = (TextView) rowView.findViewById(R.id.track_name);
         TextView albumName = (TextView) rowView.findViewById(R.id.track_album);
         ImageView albumImg = (ImageView) rowView.findViewById(R.id.track_icon);
-        Track track = values[position];
-        albumName.setText(track.album.name);
-        trackName.setText(track.name);
+        ArtistTrack track = values[position];
+        albumName.setText(track.getAlbumName());
+        trackName.setText(track.getTrackName());
         // Change the icon for Windows and iPhone
-        if (!track.album.images.isEmpty()) {
-            Picasso.with(context).load(track.album.images.get(0).url).into(albumImg);
+        if (track.getAlbumCoverImgLoc() != null) {
+            Picasso.with(context).load(track.getAlbumCoverImgLoc()).into(albumImg);
         } else {
             Picasso.with(context).load("http://prozrachniplanini.org/img/2/avatar-profile.png").into(albumImg);
         }

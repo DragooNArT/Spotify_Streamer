@@ -1,27 +1,28 @@
 package com.example.dragoonart.spotifystreamer.tasks;
 
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.example.dragoonart.spotifystreamer.ArtistTracksActivity;
+import com.example.dragoonart.spotifystreamer.beans.ArtistTrack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.Tracks;
 
 /**
  * Created by DragooNART on 6/25/2015.
  */
-public class FetchArtistTracks extends AsyncTask<String, Void, List<Track>> {
+public class FetchArtistTracks extends AsyncTask<String, Void, ArrayList<ArtistTrack>> {
     private SpotifyApi api = new SpotifyApi();
     private String artistId;
     private ArtistTracksActivity activity;
+    private Exception e;
 
     public FetchArtistTracks(String artistId, ArtistTracksActivity activity) {
         this.artistId = artistId;
@@ -29,25 +30,43 @@ public class FetchArtistTracks extends AsyncTask<String, Void, List<Track>> {
     }
 
     @Override
-    protected List<Track> doInBackground(String[] gg) {
+    protected ArrayList<ArtistTrack> doInBackground(String[] gg) {
 
         if (artistId == null || artistId.equals("")) {
             return null;
         }
 
-        List<Artist> artists = new ArrayList<Artist>();
+        ArrayList<ArtistTrack> artistTracks = new ArrayList<ArtistTrack>();
         SpotifyService spotifyService = api.getService();
         Map<String, Object> queryMap = new HashMap<String, Object>();
         queryMap.put("country", "US");
-        Tracks tracksResult = spotifyService.getArtistTopTrack(artistId, queryMap);
+        Tracks tracksResult = null;
+        try {
+            tracksResult = spotifyService.getArtistTopTrack(artistId, queryMap);
+            for (Track track : tracksResult.tracks) {
+                ArtistTrack artistTrack = new ArtistTrack();
+                artistTrack.setAlbumName(track.album.name);
+                artistTrack.setTrackName(track.name);
+                if (!track.album.images.isEmpty())
+                    artistTrack.setAlbumCoverImgLoc(track.album.images.get(0).url);
 
-        return tracksResult.tracks;
+                artistTracks.add(artistTrack);
+            }
+        } catch (Exception e) {
+            this.e = e;
+            return null;
+        }
+        return artistTracks;
 
     }
 
     @Override
-    protected void onPostExecute(List<Track> tracks) {
-        activity.renderList(tracks);
+    protected void onPostExecute(ArrayList<ArtistTrack> tracks) {
+        if (e != null) {
+            Toast.makeText(activity.getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        } else {
+            activity.renderList(tracks);
+        }
         super.onPostExecute(tracks);
     }
 }
