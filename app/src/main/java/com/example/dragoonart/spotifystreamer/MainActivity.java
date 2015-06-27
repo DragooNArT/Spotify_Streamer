@@ -72,8 +72,13 @@ public class MainActivity extends AppCompatActivity implements TextView.OnEditor
     public void renderList(ArrayList<DiscoveredArtist> artists) {
         this.artists = artists;
         ListView artistList = (ListView) findViewById(R.id.artist_list);
+        EditText inputBox = (EditText) findViewById(R.id.artist_keyword);
         if (artists == null || artists.isEmpty()) {
-            ListViewHelper.displayEmptyList(this, artistList, "No Artists found");
+            if (inputBox.getText().length() < 3) {
+                ListViewHelper.displayEmptyList(this, artistList, "Please enter more than 3 characters");
+            } else {
+                ListViewHelper.displayEmptyList(this, artistList, "No Artists found, please refine your search");
+            }
         } else {
             ArtistRowView rowView = new ArtistRowView(getBaseContext(), artists.toArray(new DiscoveredArtist[artists.size()]));
             artistList.setAdapter(rowView);
