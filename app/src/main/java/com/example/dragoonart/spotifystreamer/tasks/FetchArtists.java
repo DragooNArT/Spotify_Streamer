@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import com.example.dragoonart.spotifystreamer.MainActivity;
 import com.example.dragoonart.spotifystreamer.beans.DiscoveredArtist;
+import com.example.dragoonart.spotifystreamer.helpers.FetchTasksHelper;
 
 import java.util.ArrayList;
 
@@ -42,7 +43,7 @@ public class FetchArtists extends AsyncTask<String, Void, ArrayList<DiscoveredAr
                 discArtist.setId(artist.id);
                 discArtist.setName(artist.name);
                 if (!artist.images.isEmpty())
-                    discArtist.setImageLoc(artist.images.get(0).url);
+                    discArtist.setImageLoc(FetchTasksHelper.getThumbnailImage(artist.images));
 
                 artists.add(discArtist);
             }

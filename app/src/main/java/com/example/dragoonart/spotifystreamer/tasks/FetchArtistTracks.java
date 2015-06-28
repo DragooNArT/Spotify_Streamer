@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import com.example.dragoonart.spotifystreamer.ArtistTracksActivity;
 import com.example.dragoonart.spotifystreamer.beans.ArtistTrack;
+import com.example.dragoonart.spotifystreamer.helpers.FetchTasksHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class FetchArtistTracks extends AsyncTask<String, Void, ArrayList<ArtistT
                 artistTrack.setAlbumName(track.album.name);
                 artistTrack.setTrackName(track.name);
                 if (!track.album.images.isEmpty())
-                    artistTrack.setAlbumCoverImgLoc(track.album.images.get(0).url);
+                    artistTrack.setAlbumCoverImgLoc(FetchTasksHelper.getThumbnailImage(track.album.images));
 
                 artistTracks.add(artistTrack);
             }
