@@ -8,6 +8,7 @@ import android.widget.ListView;
 import com.example.dragoonart.spotifystreamer.adapters.ArtistTrackView;
 import com.example.dragoonart.spotifystreamer.beans.ArtistTrack;
 import com.example.dragoonart.spotifystreamer.helpers.ListViewHelper;
+import com.example.dragoonart.spotifystreamer.listeners.TrackListClickListener;
 import com.example.dragoonart.spotifystreamer.tasks.FetchArtistTracks;
 
 import java.util.ArrayList;
@@ -63,6 +64,9 @@ public class ArtistTracksActivity extends AppCompatActivity {
         } else {
             ArtistTrackView trackView = new ArtistTrackView(getBaseContext(), tracks.toArray(new ArtistTrack[tracks.size()]));
             trackList.setAdapter(trackView);
+            TrackListClickListener listener = new TrackListClickListener(this,tracks);
+            trackList.setOnItemClickListener(listener);
+
         }
     }
 

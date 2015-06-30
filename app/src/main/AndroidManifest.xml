@@ -20,7 +20,11 @@
         </activity>
         <activity
             android:name=".ArtistTracksActivity"
-            android:label="@string/title_activity_artist_tracks">
+            android:label="@string/title_activity_artist_tracks" >
+        </activity>
+        <activity
+            android:name=".AudioPlayerActivity"
+            android:label="@string/title_activity_audio_player" >
         </activity>
     </application>
 

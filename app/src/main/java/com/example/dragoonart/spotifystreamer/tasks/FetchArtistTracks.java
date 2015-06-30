@@ -48,8 +48,10 @@ public class FetchArtistTracks extends AsyncTask<String, Void, ArrayList<ArtistT
                 ArtistTrack artistTrack = new ArtistTrack();
                 artistTrack.setAlbumName(track.album.name);
                 artistTrack.setTrackName(track.name);
-                if (!track.album.images.isEmpty())
-                    artistTrack.setAlbumCoverImgLoc(FetchTasksHelper.getThumbnailImage(track.album.images));
+                if (!track.album.images.isEmpty()) {
+                    artistTrack.setAlbumCoverThumbnail(FetchTasksHelper.getThumbnailImage(track.album.images));
+                    artistTrack.setAlbumCoverFull(FetchTasksHelper.getFullImage(track.album.images));
+                }
 
                 artistTracks.add(artistTrack);
             }

@@ -13,6 +13,20 @@ public class FetchTasksHelper {
 
     }
 
+
+    public static String getFullImage(List<Image> images) {
+        String result = null;
+        long resolution = 0;
+        for (Image img : images) {
+            long currSize = img.height * img.width;
+            if (currSize > resolution || resolution == 0) {
+                resolution = currSize;
+                result = img.url;
+            }
+        }
+        return result;
+    }
+
     public static String getThumbnailImage(List<Image> images) {
         String result = null;
         long resolution = 0;

@@ -10,14 +10,23 @@ import java.io.Serializable;
 public class ArtistTrack implements Serializable {
     private String trackName;
     private String albumName;
-    private String albumCoverImgLoc;
+    private String albumCoverThumbnail;
+    private String albumCoverFull;
 
-    public String getAlbumCoverImgLoc() {
-        return albumCoverImgLoc;
+    public String getAlbumCoverFull() {
+        return albumCoverFull;
     }
 
-    public void setAlbumCoverImgLoc(String albumCoverImgLoc) {
-        this.albumCoverImgLoc = albumCoverImgLoc;
+    public void setAlbumCoverFull(String albumCoverFull) {
+        this.albumCoverFull = albumCoverFull;
+    }
+
+    public String getAlbumCoverThumbnail() {
+        return albumCoverThumbnail;
+    }
+
+    public void setAlbumCoverThumbnail(String albumCoverThumbnail) {
+        this.albumCoverThumbnail = albumCoverThumbnail;
     }
 
     public String getTrackName() {

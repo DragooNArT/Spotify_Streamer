@@ -37,8 +37,8 @@ public class ArtistTrackView extends ArrayAdapter<ArtistTrack> {
         albumName.setText(track.getAlbumName());
         trackName.setText(track.getTrackName());
         // Change the icon for Windows and iPhone
-        if (track.getAlbumCoverImgLoc() != null) {
-            Picasso.with(context).load(track.getAlbumCoverImgLoc()).into(albumImg);
+        if (track.getAlbumCoverThumbnail() != null) {
+            Picasso.with(context).load(track.getAlbumCoverThumbnail()).into(albumImg);
         } else {
             Picasso.with(context).load("http://prozrachniplanini.org/img/2/avatar-profile.png").into(albumImg);
         }
