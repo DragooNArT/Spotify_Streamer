@@ -27,8 +27,7 @@ public class TrackListClickListener implements AdapterView.OnItemClickListener {
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         ArtistTrack artist = artists.get(position);
         Intent playerActivity = new Intent(activity, AudioPlayerActivity.class);
-        //TODO add payload!
-        //artistActivity.putExtra(Intent.PAR, artist.getName());
+        playerActivity.putExtra(AudioPlayerActivity.SAVED_ARTIST_TRACK_OBJECT_KEY, artist);
         activity.startActivity(playerActivity);
     }
 }

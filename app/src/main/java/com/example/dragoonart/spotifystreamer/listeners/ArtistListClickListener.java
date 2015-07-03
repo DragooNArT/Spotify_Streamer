@@ -27,8 +27,7 @@ public class ArtistListClickListener implements AdapterView.OnItemClickListener 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         DiscoveredArtist artist = artists.get(position);
         Intent artistActivity = new Intent(activity, ArtistTracksActivity.class);
-        artistActivity.putExtra(Intent.EXTRA_TEXT, artist.getId());
-        artistActivity.putExtra(MainActivity.EXTRA_ARTIST_NAME_KEY, artist.getName());
+        artistActivity.putExtra(ArtistTracksActivity.SAVED_ARTIST_OBJECT_KEY, artist);
         activity.startActivity(artistActivity);
     }
 }

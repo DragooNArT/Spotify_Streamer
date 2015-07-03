@@ -1,12 +1,12 @@
 package com.example.dragoonart.spotifystreamer;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 
 import com.example.dragoonart.spotifystreamer.adapters.ArtistTrackView;
 import com.example.dragoonart.spotifystreamer.beans.ArtistTrack;
+import com.example.dragoonart.spotifystreamer.beans.DiscoveredArtist;
 import com.example.dragoonart.spotifystreamer.helpers.ListViewHelper;
 import com.example.dragoonart.spotifystreamer.listeners.TrackListClickListener;
 import com.example.dragoonart.spotifystreamer.tasks.FetchArtistTracks;
@@ -15,20 +15,21 @@ import java.util.ArrayList;
 
 public class ArtistTracksActivity extends AppCompatActivity {
 
-    public static final String SAVED_DATA_KEY = "ARTISTS_DATA";
-
+    public static final String SAVED_ARTIST_OBJECT_KEY = "com.example.dragoonart.spotifystreamer.beans.DiscoveredArtist";
+    private static final String SAVED_DATA_KEY = "ARTISTS_DATA";
     private ArrayList<ArtistTrack> artistTracks;
+    private DiscoveredArtist artist = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_artist_tracks);
-        String artistId = getIntent().getStringExtra(Intent.EXTRA_TEXT);
+        this.artist = getIntent().getParcelableExtra(SAVED_ARTIST_OBJECT_KEY);
         setArtistTitle();
         if (savedInstanceState != null) {
             ArrayList<ArtistTrack> artistTracks = (ArrayList<ArtistTrack>) savedInstanceState.getSerializable(SAVED_DATA_KEY);
             renderList(artistTracks);
         }
-        FetchArtistTracks fetchTask = new FetchArtistTracks(artistId, this);
+        FetchArtistTracks fetchTask = new FetchArtistTracks(artist.getId(), this);
         fetchTask.execute();
     }
 
@@ -36,9 +37,8 @@ public class ArtistTracksActivity extends AppCompatActivity {
      * Set the activity title to artist's name
      */
     private void setArtistTitle() {
-        String artistName = getIntent().getStringExtra(MainActivity.EXTRA_ARTIST_NAME_KEY);
-        if (artistName != null) {
-            setTitle(artistName + " Top Tracks");
+        if (artist != null && artist.getName() != null) {
+            setTitle(artist.getName() + " Top Tracks");
 
         }
     }
