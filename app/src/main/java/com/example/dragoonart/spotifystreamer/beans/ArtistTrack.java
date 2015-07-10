@@ -24,6 +24,15 @@ public class ArtistTrack implements Parcelable {
             };
     private String trackName;
     private String albumName;
+
+
+
+
+    private String artistName;
+
+
+
+    private String trackId;
     private String albumCoverThumbnail;
     private String albumCoverFull;
 
@@ -36,6 +45,16 @@ public class ArtistTrack implements Parcelable {
         this.albumName = in.readString();
         this.albumCoverThumbnail = in.readString();
         this.albumCoverFull = in.readString();
+        this.artistName = in.readString();
+        this.trackId = in.readString();
+    }
+
+    public void setTrackId(String trackId) {
+        this.trackId = trackId;
+    }
+
+    public void setArtistName(String artistName) {
+        this.artistName = artistName;
     }
 
     public String getAlbumCoverFull() {
@@ -56,6 +75,14 @@ public class ArtistTrack implements Parcelable {
 
     public String getTrackName() {
         return trackName;
+    }
+
+    public String getArtistName() {
+        return artistName;
+    }
+
+    public String getTrackId() {
+        return trackId;
     }
 
     public void setTrackName(String trackName) {
@@ -81,5 +108,7 @@ public class ArtistTrack implements Parcelable {
         dest.writeString(albumName);
         dest.writeString(albumCoverThumbnail);
         dest.writeString(albumCoverFull);
+        dest.writeString(artistName);
+        dest.writeString(trackId);
     }
 }

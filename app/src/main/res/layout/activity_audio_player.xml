@@ -8,9 +8,52 @@
     tools:context="com.example.dragoonart.spotifystreamer.AudioPlayerActivity">
 
     <TextView
-        android:id="@+id/someText"
+        android:id="@+id/player_artistName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/player_albumName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/player_artistName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/player_albumImage"
+        android:minHeight="300dp"
+        android:minWidth="450dp"
+        android:layout_below="@+id/player_albumName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:id="@+id/player_trackName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/player_albumImage"
+        android:layout_centerHorizontal="true" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar"
+        android:layout_below="@+id/player_trackName"
+        android:layout_marginTop="29dp"
+        android:minWidth="450dp" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Play"
+        android:id="@+id/player_playButton"
+        android:layout_below="@+id/seekBar"
+        android:layout_alignRight="@+id/player_trackName"
+        android:layout_alignEnd="@+id/player_trackName" />
 
 </RelativeLayout>

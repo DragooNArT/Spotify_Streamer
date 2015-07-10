@@ -26,10 +26,10 @@ public class ArtistTracksActivity extends AppCompatActivity {
         this.artist = getIntent().getParcelableExtra(SAVED_ARTIST_OBJECT_KEY);
         setArtistTitle();
         if (savedInstanceState != null) {
-            ArrayList<ArtistTrack> artistTracks = (ArrayList<ArtistTrack>) savedInstanceState.getSerializable(SAVED_DATA_KEY);
+            ArrayList<ArtistTrack> artistTracks = savedInstanceState.getParcelableArrayList(SAVED_DATA_KEY);
             renderList(artistTracks);
         }
-        FetchArtistTracks fetchTask = new FetchArtistTracks(artist.getId(), this);
+        FetchArtistTracks fetchTask = new FetchArtistTracks(artist, this);
         fetchTask.execute();
     }
 
@@ -46,7 +46,7 @@ public class ArtistTracksActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (artistTracks != null) {
-            outState.putSerializable(SAVED_DATA_KEY, artistTracks);
+            outState.putParcelableArrayList(SAVED_DATA_KEY, artistTracks);
         }
         super.onSaveInstanceState(outState);
     }
