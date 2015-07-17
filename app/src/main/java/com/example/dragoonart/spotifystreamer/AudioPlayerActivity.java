@@ -5,10 +5,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.example.dragoonart.spotifystreamer.beans.ArtistTrack;
 import com.example.dragoonart.spotifystreamer.beans.PlayerTrack;
+import com.example.dragoonart.spotifystreamer.listeners.AudioPlayerListener;
 import com.example.dragoonart.spotifystreamer.tasks.FetchTrack;
 import com.squareup.picasso.Picasso;
 
@@ -22,22 +25,35 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private static final String SAVED_PLAYER_TRACK_OBJECT_KEY = "SAVED_PLAYER_TRACK";
     private ArtistTrack track;
     private PlayerTrack playerTrack;
+
+    private AudioPlayerListener listener = new AudioPlayerListener(this);
+
+    public MediaPlayer getPlayer() {
+        return player;
+    }
+
     private MediaPlayer player = new MediaPlayer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_player);
+
+        this.track = getIntent().getParcelableExtra(SAVED_ARTIST_TRACK_OBJECT_KEY);
         setPlayerData();
 
-        FetchTrack fetchTrack = new FetchTrack(track.getTrackId(), this);
-        fetchTrack.execute();
+        if (savedInstanceState != null && savedInstanceState.containsKey(SAVED_PLAYER_TRACK_OBJECT_KEY)) {
+            playerTrack = savedInstanceState.getParcelable(SAVED_PLAYER_TRACK_OBJECT_KEY);
+        } else {
+            FetchTrack fetchTrack = new FetchTrack(track.getTrackId(), this);
+            fetchTrack.execute();
+        }
     }
 
     private void setPlayerData() {
-        this.track = getIntent().getParcelableExtra(SAVED_ARTIST_TRACK_OBJECT_KEY);
 
-
+        ToggleButton playButton  = (ToggleButton) findViewById(R.id.player_playButton);
+        playButton.setOnCheckedChangeListener(listener);
         TextView trackName = (TextView) findViewById(R.id.player_trackName);
         trackName.setText(track.getTrackName());
 
@@ -78,19 +94,26 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    private void disablePlayerControls () {
+        ToggleButton playButton = (ToggleButton) findViewById(R.id.player_playButton);
+        playButton.setEnabled(false);
+    }
 
     public void renderView(PlayerTrack track) {
-        //TODO load song and do song related stuff
+        playerTrack = track;
+        SeekBar seekBar = (SeekBar) findViewById(R.id.player_seekBar);
+        seekBar.setOnSeekBarChangeListener(listener);
         String previewUrl = track.getPreviewUrl();
         if (previewUrl != null && !previewUrl.equals("")) {
             try {
-                player.setDataSource(track.getPreviewUrl());
+                player.setDataSource(previewUrl);
                 player.prepare();
-                player.start();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
+        } else {
+            disablePlayerControls();
         }
     }
 }

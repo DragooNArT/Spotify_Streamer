@@ -31,6 +31,7 @@ public class FetchTrack extends AsyncTask<String, Void, Track> {
     @Override
     protected void onPostExecute(Track track) {
         PlayerTrack playerTrack = new PlayerTrack();
+        playerTrack.setPreviewUrl(track.preview_url);
         activity.renderView(playerTrack);
         super.onPostExecute(track);
     }
