@@ -21,7 +21,7 @@ public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListen
             if(checked && !activity.getPlayer().isPlaying()) {
                 activity.getPlayer().start();
             } else {
-                activity.getPlayer().stop();
+                activity.getPlayer().pause();
             }
         }
     }
