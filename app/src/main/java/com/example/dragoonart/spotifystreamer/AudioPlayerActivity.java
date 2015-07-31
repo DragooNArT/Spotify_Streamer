@@ -26,7 +26,11 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private ArtistTrack track;
     private PlayerTrack playerTrack;
 
-    private AudioPlayerListener listener = new AudioPlayerListener(this);
+    private AudioPlayerListener listener ;
+
+    public AudioPlayerActivity() {
+        listener = new AudioPlayerListener(this);
+    }
 
     public MediaPlayer getPlayer() {
         return player;
@@ -98,16 +102,20 @@ public class AudioPlayerActivity extends AppCompatActivity {
         ToggleButton playButton = (ToggleButton) findViewById(R.id.player_playButton);
         playButton.setEnabled(false);
     }
-
+    public SeekBar getSeekBar() {
+       return (SeekBar) findViewById(R.id.player_seekBar);
+    }
     public void renderView(PlayerTrack track) {
         playerTrack = track;
-        SeekBar seekBar = (SeekBar) findViewById(R.id.player_seekBar);
+        SeekBar seekBar = getSeekBar();
         seekBar.setOnSeekBarChangeListener(listener);
         String previewUrl = track.getPreviewUrl();
         if (previewUrl != null && !previewUrl.equals("")) {
             try {
                 player.setDataSource(previewUrl);
                 player.prepare();
+
+                seekBar.setMax(player.getDuration());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -115,5 +123,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
         } else {
             disablePlayerControls();
         }
+    }
+
+    public void togglePlayButton(boolean b) {
+        ToggleButton playButton  = (ToggleButton) findViewById(R.id.player_playButton);
+        playButton.setChecked(b);
     }
 }
