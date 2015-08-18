@@ -26,7 +26,6 @@ import com.squareup.picasso.Picasso;
 public class AudioPlayerActivity extends AppCompatActivity {
 
     public static final String SAVED_ARTIST_TRACK_OBJECT_KEY = "com.example.dragoonart.spotifystreamer.beans.ArtistTrack";
-    private static final String SAVED_TRACK_OBJECT_KEY = "SAVED_TRACK";
     private static final String SAVED_PLAYER_TRACK_OBJECT_KEY = "SAVED_PLAYER_TRACK";
     private ArtistTrack track;
     private PlayerTrack playerTrack;
@@ -107,7 +106,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
             outState.putParcelable(SAVED_PLAYER_TRACK_OBJECT_KEY, playerTrack);
         }
         if (track != null) {
-            outState.putParcelable(SAVED_TRACK_OBJECT_KEY, track);
+            outState.putParcelable(SAVED_ARTIST_TRACK_OBJECT_KEY, track);
         }
         super.onSaveInstanceState(outState);
     }

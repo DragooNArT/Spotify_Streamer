@@ -1,5 +1,8 @@
 package com.example.dragoonart.spotifystreamer.services;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -29,7 +32,6 @@ public class PlayerService extends Service implements MediaPlayer.OnPreparedList
     MediaPlayer mMediaPlayer = new MediaPlayer();
     WifiManager.WifiLock wifiLock;
     private AudioPlayerActivity activity;
-
     public MediaPlayer getPlayer() {
         return mMediaPlayer;
     }
@@ -38,6 +40,7 @@ public class PlayerService extends Service implements MediaPlayer.OnPreparedList
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent.getAction();
         if (action.equals(ACTION_PLAY)) {
+
             try {
                 mMediaPlayer.setDataSource(intent.getStringExtra(DATA_SOURCE_URI));
             } catch (IOException e) {
@@ -51,6 +54,17 @@ public class PlayerService extends Service implements MediaPlayer.OnPreparedList
             mMediaPlayer.prepareAsync();
         }
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mMediaPlayer != null) {
+            if (mMediaPlayer.isPlaying()) {
+                mMediaPlayer.stop();
+            }
+            mMediaPlayer.release();
+        }
     }
 
     @Nullable
@@ -84,6 +98,18 @@ public class PlayerService extends Service implements MediaPlayer.OnPreparedList
         seekBar.setMax(player.getDuration());
     }
 
+    private void initNotification() {
+        String ns = Context.NOTIFICATION_SERVICE;
+        NotificationManager mNotificationManager = (NotificationManager) activity.getSystemService(ns);
+        Notification notification = new Notification(R.drawable.notification_template_icon_bg, "tutori", System.currentTimeMillis());
+        notification.flags = Notification.FLAG_ONGOING_EVENT;
+        Context context = getApplicationContext();
+        Intent notificationIntent = new Intent(activity, AudioPlayerActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+        notification.setLatestEventInfo(context, "fada", "bada", contentIntent);
+        mNotificationManager.notify(123, notification);
+    }
+
     public class LocalBinder extends Binder {
         public PlayerService getService() {
             return PlayerService.this;
@@ -91,8 +117,8 @@ public class PlayerService extends Service implements MediaPlayer.OnPreparedList
 
         public void setActivity(AudioPlayerActivity activity) {
             PlayerService.this.activity = activity;
+            initNotification();
         }
     }
-
 
 }
