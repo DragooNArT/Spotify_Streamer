@@ -13,13 +13,11 @@ public class TrackPositionWorker implements Runnable {
     private boolean alive = true;
     private AudioPlayerActivity activity;
     private boolean forward;
+    private int iterations = 1;
+
     public TrackPositionWorker(AudioPlayerActivity activity, int id) {
         forward = id == R.id.player_fastForward;
         this.activity=activity;
-    }
-
-    private boolean playerIsAlive() {
-        return alive && activity.getPlayer() != null;
     }
 
     private boolean playerIsAlive() {
@@ -31,7 +29,7 @@ public class TrackPositionWorker implements Runnable {
 
 
                return num;
-    }    private int iterations = 1;
+    }
 
     @Override
     public void run() {

@@ -27,27 +27,46 @@ public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListen
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
         if (compoundButton.getId() == R.id.player_playButton) {
-            if (checked && !activity.getPlayer().isPlaying()) {
-                barWorker = new SeekBarWorker(activity.getSeekBar(), activity.getPlayer());
+            if (checked && activity.getPlayer() != null && !activity.getPlayer().isPlaying()) {
+                barWorker = new SeekBarWorker(activity.getSeekBar(), activity);
                 new Thread(barWorker).start();
-                activity.getPlayer().start();
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        activity.getPlayer().start();
+                    }
+                });
+
                 trackTimes = new Thread(new TrackTimesWorker(activity));
                 trackTimes.start();
             } else {
+                if (barWorker != null)
                 barWorker.stop();
-                activity.getPlayer().pause();
+                if (activity.getPlayer() != null)
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            activity.getPlayer().pause();
+                        }
+                    });
             }
         }
     }
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean isUser) {
+    public void onProgressChanged(SeekBar seekBar, final int progress, boolean isUser) {
         if (seekBar.getProgress() >= seekBar.getMax() || !activity.getPlayer().isPlaying()) {
             activity.togglePlayButton(false);
         }
         if (isUser) {
             trackTimes.interrupt();
-            activity.getPlayer().seekTo(progress);
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    activity.getPlayer().seekTo(progress);
+                }
+            });
+
         }
     }
 

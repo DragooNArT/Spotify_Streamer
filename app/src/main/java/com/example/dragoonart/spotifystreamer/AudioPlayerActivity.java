@@ -1,10 +1,14 @@
 package com.example.dragoonart.spotifystreamer;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -14,12 +18,9 @@ import android.widget.ToggleButton;
 import com.example.dragoonart.spotifystreamer.beans.ArtistTrack;
 import com.example.dragoonart.spotifystreamer.beans.PlayerTrack;
 import com.example.dragoonart.spotifystreamer.listeners.AudioPlayerListener;
+import com.example.dragoonart.spotifystreamer.services.PlayerService;
 import com.example.dragoonart.spotifystreamer.tasks.FetchTrack;
 import com.squareup.picasso.Picasso;
-
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 
 public class AudioPlayerActivity extends AppCompatActivity {
@@ -31,7 +32,24 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private PlayerTrack playerTrack;
 
     private AudioPlayerListener listener ;
-    private MediaPlayer player = new MediaPlayer();
+    private MediaPlayer player;
+    //connect to the service
+    private ServiceConnection musicConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            PlayerService.LocalBinder binder = (PlayerService.LocalBinder) service;
+            //set the player
+            player = binder.getService().getPlayer();
+            binder.setActivity(AudioPlayerActivity.this);
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            //musicBound = false;
+        }
+    };
 
     public AudioPlayerActivity() {
         listener = new AudioPlayerListener(this);
@@ -39,6 +57,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
     public MediaPlayer getPlayer() {
         return player;
+    }
+
+    public AudioPlayerListener getPlayerListener() {
+        return listener;
     }
 
     @Override
@@ -110,24 +132,22 @@ public class AudioPlayerActivity extends AppCompatActivity {
         playButton.setEnabled(false);
     }
     public SeekBar getSeekBar() {
-       return (SeekBar) findViewById(R.id.player_seekBar);
+        return (SeekBar) findViewById(R.id.player_seekBar);
     }
     public void renderView(PlayerTrack track) {
         playerTrack = track;
-        SeekBar seekBar = getSeekBar();
-        seekBar.setOnSeekBarChangeListener(listener);
+
         String previewUrl = track.getPreviewUrl();
         if (previewUrl != null && !previewUrl.equals("")) {
-            try {
-                player.setDataSource(previewUrl);
-                player.prepare();
-                Chronometer remaining = (Chronometer) findViewById(R.id.player_timeRemaining);
-                DateFormat formatter = new SimpleDateFormat("mm:ss");
-                remaining.setText(formatter.format(player.getDuration()));
-                seekBar.setMax(player.getDuration());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+            Intent intent = new Intent(this, PlayerService.class);
+            intent.setAction(PlayerService.ACTION_PLAY);
+            intent.putExtra(PlayerService.DATA_SOURCE_URI, previewUrl);
+
+            startService(intent);
+            bindService(intent, musicConnection, Context.BIND_AUTO_CREATE);
+
+
 
         } else {
             disablePlayerControls();
