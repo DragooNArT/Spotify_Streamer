@@ -4,6 +4,8 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.Chronometer;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -16,6 +18,8 @@ import com.example.dragoonart.spotifystreamer.tasks.FetchTrack;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 
 public class AudioPlayerActivity extends AppCompatActivity {
@@ -27,6 +31,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private PlayerTrack playerTrack;
 
     private AudioPlayerListener listener ;
+    private MediaPlayer player = new MediaPlayer();
 
     public AudioPlayerActivity() {
         listener = new AudioPlayerListener(this);
@@ -35,8 +40,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
     public MediaPlayer getPlayer() {
         return player;
     }
-
-    private MediaPlayer player = new MediaPlayer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,10 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private void setPlayerData() {
 
         ToggleButton playButton  = (ToggleButton) findViewById(R.id.player_playButton);
+        ImageButton rewindButton = (ImageButton) findViewById(R.id.player_rewind);
+        ImageButton fFowrardButton = (ImageButton) findViewById(R.id.player_fastForward);
+        rewindButton.setOnTouchListener(listener);
+        fFowrardButton.setOnTouchListener(listener);
         playButton.setOnCheckedChangeListener(listener);
         TextView trackName = (TextView) findViewById(R.id.player_trackName);
         trackName.setText(track.getTrackName());
@@ -114,7 +121,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
             try {
                 player.setDataSource(previewUrl);
                 player.prepare();
-
+                Chronometer remaining = (Chronometer) findViewById(R.id.player_timeRemaining);
+                DateFormat formatter = new SimpleDateFormat("mm:ss");
+                remaining.setText(formatter.format(player.getDuration()));
                 seekBar.setMax(player.getDuration());
             } catch (IOException e) {
                 e.printStackTrace();
