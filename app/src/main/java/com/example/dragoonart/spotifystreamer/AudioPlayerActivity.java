@@ -22,18 +22,25 @@ import com.example.dragoonart.spotifystreamer.services.PlayerService;
 import com.example.dragoonart.spotifystreamer.tasks.FetchTrack;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 
 public class AudioPlayerActivity extends AppCompatActivity {
 
     public static final String SAVED_ARTIST_TRACK_OBJECT_KEY = "com.example.dragoonart.spotifystreamer.beans.ArtistTrack";
     private static final String SAVED_PLAYER_TRACK_OBJECT_KEY = "SAVED_PLAYER_TRACK";
-    private ArtistTrack track;
-    private PlayerTrack playerTrack;
 
-    private AudioPlayerListener listener ;
+    public static final String SAVED_ARTIST_ALL_TRACKS_OBJECT_KEY = "SAVED_ALL_TRACKS";
+
+    private ArtistTrack currentTrack;
+    private ArrayList<ArtistTrack> allTracks;
+    private PlayerTrack currentPlayerTrack;
+
+    private AudioPlayerListener listener;
     private MediaPlayer player;
+    private Intent playerIntent;
     //connect to the service
-    private ServiceConnection musicConnection = new ServiceConnection() {
+    private ServiceConnection playerConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -46,7 +53,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            //musicBound = false;
+            player = null;
+
         }
     };
 
@@ -66,47 +74,59 @@ public class AudioPlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_player);
+        this.allTracks = getIntent().getParcelableArrayListExtra(SAVED_ARTIST_ALL_TRACKS_OBJECT_KEY);
+        this.currentTrack = allTracks.get(getIntent().getIntExtra(SAVED_ARTIST_TRACK_OBJECT_KEY,0));
 
-        this.track = getIntent().getParcelableExtra(SAVED_ARTIST_TRACK_OBJECT_KEY);
         setPlayerData();
 
         if (savedInstanceState != null && savedInstanceState.containsKey(SAVED_PLAYER_TRACK_OBJECT_KEY)) {
-            playerTrack = savedInstanceState.getParcelable(SAVED_PLAYER_TRACK_OBJECT_KEY);
+            currentPlayerTrack = savedInstanceState.getParcelable(SAVED_PLAYER_TRACK_OBJECT_KEY);
         } else {
-            FetchTrack fetchTrack = new FetchTrack(track.getTrackId(), this);
+            FetchTrack fetchTrack = new FetchTrack(currentTrack.getTrackId(), this);
             fetchTrack.execute();
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(playerIntent);
+    }
+
     private void setPlayerData() {
 
-        ToggleButton playButton  = (ToggleButton) findViewById(R.id.player_playButton);
+        ToggleButton playButton = (ToggleButton) findViewById(R.id.player_playButton);
         ImageButton rewindButton = (ImageButton) findViewById(R.id.player_rewind);
         ImageButton fFowrardButton = (ImageButton) findViewById(R.id.player_fastForward);
+        ImageButton prevTrackButton = (ImageButton) findViewById(R.id.player_previousTrack);
+        ImageButton nextTrackButton = (ImageButton) findViewById(R.id.player_nextTrack);
+
+        prevTrackButton.setOnClickListener(listener);
+        nextTrackButton.setOnClickListener(listener);
         rewindButton.setOnTouchListener(listener);
         fFowrardButton.setOnTouchListener(listener);
         playButton.setOnCheckedChangeListener(listener);
         TextView trackName = (TextView) findViewById(R.id.player_trackName);
-        trackName.setText(track.getTrackName());
+        trackName.setText(currentTrack.getTrackName());
 
         TextView albumName = (TextView) findViewById(R.id.player_albumName);
-        albumName.setText(track.getAlbumName());
+        albumName.setText(currentTrack.getAlbumName());
 
 
         TextView artistName = (TextView) findViewById(R.id.player_artistName);
-        artistName.setText(track.getArtistName());
+        artistName.setText(currentTrack.getArtistName());
 
         ImageView albumImage = (ImageView) findViewById(R.id.player_albumImage);
-        Picasso.with(getBaseContext()).load(track.getAlbumCoverFull()).into(albumImage);
+        Picasso.with(getBaseContext()).load(currentTrack.getAlbumCoverFull()).into(albumImage);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (playerTrack != null) {
-            outState.putParcelable(SAVED_PLAYER_TRACK_OBJECT_KEY, playerTrack);
+        if (currentPlayerTrack != null) {
+            outState.putParcelable(SAVED_PLAYER_TRACK_OBJECT_KEY, currentPlayerTrack);
         }
-        if (track != null) {
-            outState.putParcelable(SAVED_ARTIST_TRACK_OBJECT_KEY, track);
+        if (currentTrack != null) {
+            outState.putParcelable(SAVED_ARTIST_TRACK_OBJECT_KEY, currentTrack);
         }
         super.onSaveInstanceState(outState);
     }
@@ -126,26 +146,28 @@ public class AudioPlayerActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    private void disablePlayerControls () {
+
+    private void disablePlayerControls() {
         ToggleButton playButton = (ToggleButton) findViewById(R.id.player_playButton);
         playButton.setEnabled(false);
     }
+
     public SeekBar getSeekBar() {
         return (SeekBar) findViewById(R.id.player_seekBar);
     }
+
     public void renderView(PlayerTrack track) {
-        playerTrack = track;
+        currentPlayerTrack = track;
 
         String previewUrl = track.getPreviewUrl();
         if (previewUrl != null && !previewUrl.equals("")) {
 
-            Intent intent = new Intent(this, PlayerService.class);
-            intent.setAction(PlayerService.ACTION_PLAY);
-            intent.putExtra(PlayerService.DATA_SOURCE_URI, previewUrl);
+            playerIntent = new Intent(this, PlayerService.class);
+            playerIntent.setAction(PlayerService.ACTION_PLAY);
+            playerIntent.putExtra(PlayerService.DATA_SOURCE_URI, previewUrl);
 
-            startService(intent);
-            bindService(intent, musicConnection, Context.BIND_AUTO_CREATE);
-
+            startService(playerIntent);
+            bindService(playerIntent, playerConnection, Context.BIND_AUTO_CREATE);
 
 
         } else {
@@ -154,7 +176,44 @@ public class AudioPlayerActivity extends AppCompatActivity {
     }
 
     public void togglePlayButton(boolean b) {
-        ToggleButton playButton  = (ToggleButton) findViewById(R.id.player_playButton);
+        ToggleButton playButton = (ToggleButton) findViewById(R.id.player_playButton);
         playButton.setChecked(b);
     }
+
+    public void nextTrack() {
+        int pos = allTracks.indexOf(currentTrack)+1;
+        if(pos>=allTracks.size()) {
+            return;
+        }
+        currentTrack = allTracks.get(pos);
+
+        reloadView();
+
+    }
+
+    private void reloadView() {
+
+        if(playerIntent != null) {
+            try {
+                unbindService(playerConnection);
+            } catch(Exception e) {
+                //do nothing
+            }
+            stopService(playerIntent);
+
+        }
+        setPlayerData();
+        FetchTrack fetchTrack = new FetchTrack(currentTrack.getTrackId(), this);
+        fetchTrack.execute();
+    }
+
+    public void previousTrack() {
+        int pos = allTracks.indexOf(currentTrack) - 1;
+        if(pos<0) {
+            return;
+        }
+        currentTrack = allTracks.get(pos);
+        reloadView();
+    }
+
 }

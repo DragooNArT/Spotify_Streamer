@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/player_seekBar"
         android:layout_gravity="center"
-        android:layout_marginRight="30dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="40dp"
         android:layout_toLeftOf="@+id/player_playButton"
         android:gravity="center"
@@ -82,7 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/player_seekBar"
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="40dp"
         android:layout_toEndOf="@+id/player_playButton"
         android:layout_toRightOf="@+id/player_playButton"
@@ -110,5 +110,29 @@
         android:layout_toRightOf="@+id/player_fastForward"
         android:ems="10"
         android:inputType="time" />
+
+    <ImageButton
+        android:id="@+id/player_previousTrack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:src="@android:drawable/ic_media_previous"
+        android:layout_alignTop="@+id/player_rewind"
+        android:layout_toLeftOf="@+id/player_rewind"
+        android:layout_toStartOf="@+id/player_rewind"
+        android:layout_marginRight="10dp" />
+
+    <ImageButton
+        android:id="@+id/player_nextTrack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:src="@android:drawable/ic_media_next"
+        android:layout_alignTop="@+id/player_fastForward"
+        android:layout_alignRight="@+id/player_timeRemaining"
+        android:layout_alignEnd="@+id/player_timeRemaining"
+        android:layout_marginLeft="10dp" />
 
 </RelativeLayout>

@@ -8,7 +8,7 @@ import com.example.dragoonart.spotifystreamer.ArtistTracksActivity;
 import com.example.dragoonart.spotifystreamer.AudioPlayerActivity;
 import com.example.dragoonart.spotifystreamer.beans.ArtistTrack;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by xnml on 2015-06-30.
@@ -16,18 +16,18 @@ import java.util.List;
 public class TrackListClickListener implements AdapterView.OnItemClickListener {
 
     private ArtistTracksActivity activity;
-    private List<ArtistTrack> artists;
+    private ArrayList<ArtistTrack> artistTracks;
 
-    public TrackListClickListener(ArtistTracksActivity activity, List<ArtistTrack> artists) {
+    public TrackListClickListener(ArtistTracksActivity activity, ArrayList<ArtistTrack> artistTracks) {
         this.activity = activity;
-        this.artists = artists;
+        this.artistTracks = artistTracks;
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        ArtistTrack artist = artists.get(position);
         Intent playerActivity = new Intent(activity, AudioPlayerActivity.class);
-        playerActivity.putExtra(AudioPlayerActivity.SAVED_ARTIST_TRACK_OBJECT_KEY, artist);
+        playerActivity.putExtra(AudioPlayerActivity.SAVED_ARTIST_TRACK_OBJECT_KEY, position);
+        playerActivity.putParcelableArrayListExtra(AudioPlayerActivity.SAVED_ARTIST_ALL_TRACKS_OBJECT_KEY, artistTracks);
         activity.startActivity(playerActivity);
     }
 }

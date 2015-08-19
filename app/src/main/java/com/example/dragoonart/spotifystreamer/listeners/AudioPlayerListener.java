@@ -15,11 +15,12 @@ import com.example.dragoonart.spotifystreamer.workers.TrackTimesWorker;
 /**
  * Created by xnml on 2015-07-17.
  */
-public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener, ImageButton.OnTouchListener {
+public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener, ImageButton.OnTouchListener, ImageButton.OnClickListener {
     private AudioPlayerActivity activity;
     private SeekBarWorker barWorker;
     private Thread trackTimes;
     private TrackPositionWorker posWorker = null;
+
     public AudioPlayerListener(AudioPlayerActivity activity) {
         this.activity = activity;
     }
@@ -41,7 +42,7 @@ public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListen
                 trackTimes.start();
             } else {
                 if (barWorker != null)
-                barWorker.stop();
+                    barWorker.stop();
                 if (activity.getPlayer() != null)
                     activity.runOnUiThread(new Runnable() {
                         @Override
@@ -55,10 +56,10 @@ public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListen
 
     @Override
     public void onProgressChanged(SeekBar seekBar, final int progress, boolean isUser) {
-        if (seekBar.getProgress() >= seekBar.getMax() || !activity.getPlayer().isPlaying()) {
+        if (seekBar.getProgress() >= seekBar.getMax() || activity.getPlayer() == null || !activity.getPlayer().isPlaying()) {
             activity.togglePlayButton(false);
         }
-        if (isUser) {
+        if (isUser && activity.getPlayer() != null) {
             trackTimes.interrupt();
             activity.runOnUiThread(new Runnable() {
                 @Override
@@ -113,4 +114,12 @@ public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListen
     }
 
 
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.player_previousTrack ) {
+            activity.previousTrack();
+        } else if (view.getId() == R.id.player_nextTrack ) {
+            activity.nextTrack();
+        }
+    }
 }
