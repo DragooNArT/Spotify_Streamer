@@ -1,6 +1,5 @@
 package com.example.dragoonart.spotifystreamer.workers;
 
-import android.media.MediaPlayer;
 import android.widget.Chronometer;
 
 import com.example.dragoonart.spotifystreamer.AudioPlayerActivity;
@@ -23,14 +22,14 @@ public class TrackTimesWorker implements Runnable {
 
     @Override
     public void run() {
-        MediaPlayer player = activity.getPlayer();
-        while (player.isPlaying()) {
-            final Chronometer elapsed = (Chronometer) activity.findViewById(R.id.player_timeElapsed);
-            final Chronometer remaining = (Chronometer) activity.findViewById(R.id.player_timeRemaining);
-            final DateFormat formatter = new SimpleDateFormat("mm:ss");
-            final Date elapsedDate = new Date(player.getCurrentPosition());
+        final Chronometer elapsed = (Chronometer) activity.findViewById(R.id.player_timeElapsed);
+        final Chronometer remaining = (Chronometer) activity.findViewById(R.id.player_timeRemaining);
+        final DateFormat formatter = new SimpleDateFormat("mm:ss");
 
-            final Date remainingDate = new Date(player.getDuration() - player.getCurrentPosition());
+        while (activity.getPlayer() != null && activity.getPlayer().isPlaying()) {
+
+            final Date elapsedDate = new Date(activity.getPlayer().getCurrentPosition());
+            final Date remainingDate = new Date(activity.getPlayer().getDuration() - activity.getPlayer().getCurrentPosition());
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -45,5 +44,6 @@ public class TrackTimesWorker implements Runnable {
                 //recalculate immediately
             }
         }
+
     }
 }

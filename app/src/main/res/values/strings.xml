@@ -6,4 +6,5 @@
     <string name="title_activity_audio_player">AudioPlayerActivity</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="track_share">Share</string>
 </resources>

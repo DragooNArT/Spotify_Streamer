@@ -109,30 +109,40 @@
         android:layout_toEndOf="@+id/player_fastForward"
         android:layout_toRightOf="@+id/player_fastForward"
         android:ems="10"
-        android:inputType="time" />
+        android:inputType="time"
+        android:text="0:00" />
 
     <ImageButton
         android:id="@+id/player_previousTrack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:src="@android:drawable/ic_media_previous"
         android:layout_alignTop="@+id/player_rewind"
+        android:layout_gravity="center"
+        android:layout_marginRight="10dp"
         android:layout_toLeftOf="@+id/player_rewind"
         android:layout_toStartOf="@+id/player_rewind"
-        android:layout_marginRight="10dp" />
+        android:gravity="center"
+        android:src="@android:drawable/ic_media_previous" />
 
     <ImageButton
         android:id="@+id/player_nextTrack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:src="@android:drawable/ic_media_next"
-        android:layout_alignTop="@+id/player_fastForward"
-        android:layout_alignRight="@+id/player_timeRemaining"
         android:layout_alignEnd="@+id/player_timeRemaining"
-        android:layout_marginLeft="10dp" />
+        android:layout_alignRight="@+id/player_timeRemaining"
+        android:layout_alignTop="@+id/player_fastForward"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:src="@android:drawable/ic_media_next" />
+
+    <ProgressBar
+        android:id="@+id/player_progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/player_albumImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="108dp" />
 
 </RelativeLayout>

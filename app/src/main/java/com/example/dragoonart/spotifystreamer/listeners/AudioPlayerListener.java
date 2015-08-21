@@ -15,16 +15,20 @@ import com.example.dragoonart.spotifystreamer.workers.TrackTimesWorker;
 /**
  * Created by xnml on 2015-07-17.
  */
-public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener, ImageButton.OnTouchListener, ImageButton.OnClickListener {
+public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener, ImageButton.OnTouchListener {
     private AudioPlayerActivity activity;
     private SeekBarWorker barWorker;
     private Thread trackTimes;
+    private TrackTimesWorker trackTimesWorker = null;
     private TrackPositionWorker posWorker = null;
 
     public AudioPlayerListener(AudioPlayerActivity activity) {
         this.activity = activity;
     }
 
+    public void setActivity(AudioPlayerActivity activity) {
+        this.activity = activity;
+    }
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
         if (compoundButton.getId() == R.id.player_playButton) {
@@ -37,13 +41,13 @@ public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListen
                         activity.getPlayer().start();
                     }
                 });
-
-                trackTimes = new Thread(new TrackTimesWorker(activity));
+                trackTimesWorker = new TrackTimesWorker(activity);
+                trackTimes = new Thread(trackTimesWorker);
                 trackTimes.start();
             } else {
                 if (barWorker != null)
                     barWorker.stop();
-                if (activity.getPlayer() != null)
+                if (activity.getPlayer() != null && activity.getPlayer().isPlaying())
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -104,8 +108,6 @@ public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListen
 
         return false;
     }
-
-
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         boolean result = performPositionModification(v.getId(), event);
@@ -113,13 +115,14 @@ public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListen
         return result;
     }
 
-
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.player_previousTrack ) {
-            activity.previousTrack();
-        } else if (view.getId() == R.id.player_nextTrack ) {
-            activity.nextTrack();
+    public void killPlayerWorkers() {
+        if (posWorker != null) {
+            posWorker.killMe();
+            posWorker = null;
+        }
+        if (barWorker != null) {
+            barWorker.stop();
+            barWorker = null;
         }
     }
 }
