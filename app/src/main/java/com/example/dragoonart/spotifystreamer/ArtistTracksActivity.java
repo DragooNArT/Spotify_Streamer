@@ -15,10 +15,10 @@ public class ArtistTracksActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_artist_tracks);
         fragment = new ArtistTracksActivityFragment();
-
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .add(R.id.artist_activity_container, fragment)
                 .commit();
+
     }
 
     @Override

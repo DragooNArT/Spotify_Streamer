@@ -37,7 +37,7 @@ public class ArtistListClickListener implements AdapterView.OnItemClickListener 
         } else {
             ArtistTracksActivityFragment fragment = new ArtistTracksActivityFragment();
             fragment.setArtist(artist);
-            activity.getActivity().getFragmentManager().beginTransaction().replace(R.id.tablet_trackListContainer, fragment).commit();
+            activity.getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.tablet_trackListContainer, fragment).commit();
         }
     }
 }

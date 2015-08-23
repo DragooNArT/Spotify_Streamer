@@ -1,7 +1,7 @@
 package com.example.dragoonart.spotifystreamer;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +38,10 @@ public class ArtistTracksActivityFragment extends Fragment {
         }
 
         setArtistTitle();
+        if (artistTracks != null) {
+            renderList(artistTracks);
+            return view;
+        }
         if (savedInstanceState != null) {
             ArrayList<ArtistTrack> artistTracks = savedInstanceState.getParcelableArrayList(SAVED_DATA_KEY);
             renderList(artistTracks);
@@ -85,5 +89,9 @@ public class ArtistTracksActivityFragment extends Fragment {
 
     public ArrayList<ArtistTrack> getArtistTracks() {
         return artistTracks;
+    }
+
+    public void setTracks(ArrayList<ArtistTrack> tracks) {
+        this.artistTracks = tracks;
     }
 }

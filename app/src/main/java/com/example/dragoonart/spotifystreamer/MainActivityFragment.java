@@ -1,9 +1,9 @@
 package com.example.dragoonart.spotifystreamer;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class MainActivityFragment extends Fragment implements TextView.OnEditorActionListener {
 
-    public static final String SAVED_DATA_KEY = "SEARCH_DATA";
+
     public static final String EXTRA_ARTIST_NAME_KEY = "ARTIST_NAME";
     private ArrayList<DiscoveredArtist> artists;
     private View view;
@@ -32,10 +32,8 @@ public class MainActivityFragment extends Fragment implements TextView.OnEditorA
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         view = inflater.inflate(R.layout.activity_main_fragment, container, false);
-        if (savedInstanceState != null) {
-            ArrayList<DiscoveredArtist> artists = (ArrayList<DiscoveredArtist>) savedInstanceState.getSerializable(SAVED_DATA_KEY);
+        if (artists != null) {
             renderList(artists);
         }
         // your text box
@@ -87,5 +85,9 @@ public class MainActivityFragment extends Fragment implements TextView.OnEditorA
 
     public ArrayList<DiscoveredArtist> getArtists() {
         return artists;
+    }
+
+    public void setArtists(ArrayList<DiscoveredArtist> artists) {
+        this.artists = artists;
     }
 }
