@@ -44,7 +44,9 @@ public class ArtistTracksActivityFragment extends Fragment {
         }
         if (savedInstanceState != null) {
             ArrayList<ArtistTrack> artistTracks = savedInstanceState.getParcelableArrayList(SAVED_DATA_KEY);
-            renderList(artistTracks);
+            if (artistTracks != null) {
+                renderList(artistTracks);
+            }
         } else {
             FetchArtistTracks fetchTask = new FetchArtistTracks(artist, this);
             fetchTask.execute();

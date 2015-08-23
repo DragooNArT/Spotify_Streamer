@@ -2,10 +2,9 @@
     <string name="app_name">Spotify Streamer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="title_activity_artist_tracks">ArtistTracksActivity</string>
-    <string name="title_activity_audio_player">AudioPlayerActivity</string>
+    <string name="title_activity_artist_tracks">Artist Tracks</string>
+    <string name="title_activity_audio_player">Now Playing</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="track_share">Share</string>
-    <string name="title_activity_main2">Main2Activity</string>
 </resources>
