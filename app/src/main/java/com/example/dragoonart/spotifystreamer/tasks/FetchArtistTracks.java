@@ -3,7 +3,7 @@ package com.example.dragoonart.spotifystreamer.tasks;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.example.dragoonart.spotifystreamer.ArtistTracksActivity;
+import com.example.dragoonart.spotifystreamer.ArtistTracksActivityFragment;
 import com.example.dragoonart.spotifystreamer.beans.ArtistTrack;
 import com.example.dragoonart.spotifystreamer.beans.DiscoveredArtist;
 import com.example.dragoonart.spotifystreamer.helpers.FetchTasksHelper;
@@ -23,10 +23,10 @@ import kaaes.spotify.webapi.android.models.Tracks;
 public class FetchArtistTracks extends AsyncTask<String, Void, ArrayList<ArtistTrack>> {
     private SpotifyApi api = new SpotifyApi();
     private DiscoveredArtist artist;
-    private ArtistTracksActivity activity;
+    private ArtistTracksActivityFragment activity;
     private Exception e;
 
-    public FetchArtistTracks(DiscoveredArtist artist, ArtistTracksActivity activity) {
+    public FetchArtistTracks(DiscoveredArtist artist, ArtistTracksActivityFragment activity) {
         this.artist = artist;
         this.activity = activity;
     }
@@ -69,7 +69,7 @@ public class FetchArtistTracks extends AsyncTask<String, Void, ArrayList<ArtistT
     @Override
     protected void onPostExecute(ArrayList<ArtistTrack> tracks) {
         if (e != null) {
-            Toast.makeText(activity.getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(activity.getActivity().getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         } else {
             activity.renderList(tracks);
         }

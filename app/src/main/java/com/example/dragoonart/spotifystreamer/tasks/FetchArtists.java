@@ -3,7 +3,7 @@ package com.example.dragoonart.spotifystreamer.tasks;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.example.dragoonart.spotifystreamer.MainActivity;
+import com.example.dragoonart.spotifystreamer.MainActivityFragment;
 import com.example.dragoonart.spotifystreamer.beans.DiscoveredArtist;
 import com.example.dragoonart.spotifystreamer.helpers.FetchTasksHelper;
 
@@ -21,8 +21,9 @@ public class FetchArtists extends AsyncTask<String, Void, ArrayList<DiscoveredAr
     Exception e = null;
     private SpotifyApi api = new SpotifyApi();
     private String keyword;
-    private MainActivity activity;
-    public FetchArtists(String keyword, MainActivity activity) {
+    private MainActivityFragment activity;
+
+    public FetchArtists(String keyword, MainActivityFragment activity) {
         this.keyword = keyword;
         this.activity = activity;
     }
@@ -59,7 +60,7 @@ public class FetchArtists extends AsyncTask<String, Void, ArrayList<DiscoveredAr
     @Override
     protected void onPostExecute(ArrayList<DiscoveredArtist> artists) {
         if (e != null) {
-            Toast.makeText(activity.getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(activity.getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         } else {
             activity.renderList(artists);
         }

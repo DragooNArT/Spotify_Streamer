@@ -1,18 +1,15 @@
 package com.example.dragoonart.spotifystreamer.workers;
 
 import android.media.MediaPlayer;
-import android.widget.SeekBar;
 
-import com.example.dragoonart.spotifystreamer.AudioPlayerActivity;
-import com.example.dragoonart.spotifystreamer.R;
+import com.example.dragoonart.spotifystreamer.AudioPlayerActivityFragment;
 
 public class SeekBarWorker implements Runnable {
-    private AudioPlayerActivity activity;
-    private SeekBar bar;
+    private AudioPlayerActivityFragment activity;
     private boolean run = true;
 
-    public SeekBarWorker(SeekBar bar, AudioPlayerActivity activity) {
-        this.bar = bar;
+    public SeekBarWorker(AudioPlayerActivityFragment activity) {
+
         this.activity = activity;
     }
 
@@ -20,21 +17,22 @@ public class SeekBarWorker implements Runnable {
 
         while (run) {
             final MediaPlayer player = activity.getPlayer();
-            if (bar.getProgress() == player.getCurrentPosition() && !player.isPlaying()) {
-                run = false;
-                bar.setProgress(bar.getMax());
+            if (activity.getSeekBar().getProgress() == player.getCurrentPosition() && !player.isPlaying()) {
+                activity.getSeekBar().setProgress(activity.getSeekBar().getMax());
             }
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    ((SeekBar) activity.findViewById(R.id.player_seekBar)).setProgress(player.getCurrentPosition());
-                }
-            });
+            if (activity != null && activity.getActivity() != null) {
+                activity.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        activity.getSeekBar().setProgress(player.getCurrentPosition());
+                    }
+                });
 
-            try {
-                Thread.sleep(player.getDuration() / 200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                try {
+                    Thread.sleep(player.getDuration() / 200);
+                } catch (InterruptedException e) {
+                    //recalculate immediately
+                }
             }
         }
     }

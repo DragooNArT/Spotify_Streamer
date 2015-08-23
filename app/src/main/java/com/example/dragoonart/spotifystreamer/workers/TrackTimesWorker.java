@@ -2,7 +2,7 @@ package com.example.dragoonart.spotifystreamer.workers;
 
 import android.widget.Chronometer;
 
-import com.example.dragoonart.spotifystreamer.AudioPlayerActivity;
+import com.example.dragoonart.spotifystreamer.AudioPlayerActivityFragment;
 import com.example.dragoonart.spotifystreamer.R;
 
 import java.text.DateFormat;
@@ -14,36 +14,44 @@ import java.util.Date;
  */
 public class TrackTimesWorker implements Runnable {
 
-    private AudioPlayerActivity activity;
+    private AudioPlayerActivityFragment activity;
+    private boolean alive = true;
 
-    public TrackTimesWorker(AudioPlayerActivity activity) {
+    public TrackTimesWorker(AudioPlayerActivityFragment activity) {
         this.activity = activity;
     }
 
     @Override
     public void run() {
-        final Chronometer elapsed = (Chronometer) activity.findViewById(R.id.player_timeElapsed);
-        final Chronometer remaining = (Chronometer) activity.findViewById(R.id.player_timeRemaining);
         final DateFormat formatter = new SimpleDateFormat("mm:ss");
 
-        while (activity.getPlayer() != null && activity.getPlayer().isPlaying()) {
+        while (alive && activity.getPlayer() != null && activity.getPlayer().isPlaying()) {
 
+            final Chronometer elapsed = (Chronometer) activity.findViewById(R.id.player_timeElapsed);
+            final Chronometer remaining = (Chronometer) activity.findViewById(R.id.player_timeRemaining);
             final Date elapsedDate = new Date(activity.getPlayer().getCurrentPosition());
             final Date remainingDate = new Date(activity.getPlayer().getDuration() - activity.getPlayer().getCurrentPosition());
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    elapsed.setText(formatter.format(elapsedDate));
-                    remaining.setText(formatter.format(remainingDate));
-                }
-            });
+            if (activity != null && activity.getActivity() != null) {
+                activity.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        elapsed.setText(formatter.format(elapsedDate));
+                        remaining.setText(formatter.format(remainingDate));
+                    }
+                });
 
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                //recalculate immediately
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    //recalculate immediately
+                }
             }
         }
 
+    }
+
+    public void killMe() {
+        alive = false;
+        Thread.currentThread().interrupt();
     }
 }

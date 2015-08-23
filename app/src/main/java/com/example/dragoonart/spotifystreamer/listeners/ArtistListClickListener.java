@@ -5,7 +5,9 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.example.dragoonart.spotifystreamer.ArtistTracksActivity;
-import com.example.dragoonart.spotifystreamer.MainActivity;
+import com.example.dragoonart.spotifystreamer.ArtistTracksActivityFragment;
+import com.example.dragoonart.spotifystreamer.MainActivityFragment;
+import com.example.dragoonart.spotifystreamer.R;
 import com.example.dragoonart.spotifystreamer.beans.DiscoveredArtist;
 
 import java.util.List;
@@ -15,10 +17,10 @@ import java.util.List;
  */
 public class ArtistListClickListener implements AdapterView.OnItemClickListener {
 
-    private MainActivity activity;
+    private MainActivityFragment activity;
     private List<DiscoveredArtist> artists;
 
-    public ArtistListClickListener(MainActivity activity, List<DiscoveredArtist> artists) {
+    public ArtistListClickListener(MainActivityFragment activity, List<DiscoveredArtist> artists) {
         this.activity = activity;
         this.artists = artists;
     }
@@ -26,8 +28,16 @@ public class ArtistListClickListener implements AdapterView.OnItemClickListener 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         DiscoveredArtist artist = artists.get(position);
-        Intent artistActivity = new Intent(activity, ArtistTracksActivity.class);
-        artistActivity.putExtra(ArtistTracksActivity.SAVED_ARTIST_OBJECT_KEY, artist);
-        activity.startActivity(artistActivity);
+
+
+        if (activity.getActivity().findViewById(R.id.tablet_masterpane) == null) {
+            Intent artistActivity = new Intent(activity.getActivity(), ArtistTracksActivity.class);
+            artistActivity.putExtra(ArtistTracksActivityFragment.SAVED_ARTIST_OBJECT_KEY, artist);
+            activity.startActivity(artistActivity);
+        } else {
+            ArtistTracksActivityFragment fragment = new ArtistTracksActivityFragment();
+            fragment.setArtist(artist);
+            activity.getActivity().getFragmentManager().beginTransaction().replace(R.id.tablet_trackListContainer, fragment).commit();
+        }
     }
 }

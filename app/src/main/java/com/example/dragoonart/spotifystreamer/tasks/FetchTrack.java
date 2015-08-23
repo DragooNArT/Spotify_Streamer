@@ -2,7 +2,7 @@ package com.example.dragoonart.spotifystreamer.tasks;
 
 import android.os.AsyncTask;
 
-import com.example.dragoonart.spotifystreamer.AudioPlayerActivity;
+import com.example.dragoonart.spotifystreamer.AudioPlayerActivityFragment;
 import com.example.dragoonart.spotifystreamer.beans.PlayerTrack;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
@@ -15,8 +15,9 @@ public class FetchTrack extends AsyncTask<String, Void, Track> {
 
     private SpotifyApi api = new SpotifyApi();
     private String trackId;
-    private AudioPlayerActivity activity;
-    public FetchTrack(String trackId,AudioPlayerActivity activity) {
+    private AudioPlayerActivityFragment activity;
+
+    public FetchTrack(String trackId, AudioPlayerActivityFragment activity) {
         this.trackId=trackId;
         this.activity=activity;
     }

@@ -1,6 +1,5 @@
 package com.example.dragoonart.spotifystreamer.helpers;
 
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -16,7 +15,7 @@ public class ListViewHelper {
 
     }
 
-    public static void displayEmptyList(AppCompatActivity activity, ListView list,String textToDisplay) {
+    public static void displayEmptyList(ListView list, String textToDisplay) {
         String[] text = new String[]{textToDisplay};
         ArrayAdapter adapter = new ArrayAdapter(list.getContext(), R.layout.list_plain_text,text);
         list.setAdapter(adapter);

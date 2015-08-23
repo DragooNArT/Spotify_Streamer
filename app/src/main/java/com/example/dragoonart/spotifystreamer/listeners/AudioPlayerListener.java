@@ -6,7 +6,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 
-import com.example.dragoonart.spotifystreamer.AudioPlayerActivity;
+import com.example.dragoonart.spotifystreamer.AudioPlayerActivityFragment;
 import com.example.dragoonart.spotifystreamer.R;
 import com.example.dragoonart.spotifystreamer.workers.SeekBarWorker;
 import com.example.dragoonart.spotifystreamer.workers.TrackPositionWorker;
@@ -16,39 +16,51 @@ import com.example.dragoonart.spotifystreamer.workers.TrackTimesWorker;
  * Created by xnml on 2015-07-17.
  */
 public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener, ImageButton.OnTouchListener {
-    private AudioPlayerActivity activity;
+    private AudioPlayerActivityFragment activity;
     private SeekBarWorker barWorker;
     private Thread trackTimes;
     private TrackTimesWorker trackTimesWorker = null;
     private TrackPositionWorker posWorker = null;
 
-    public AudioPlayerListener(AudioPlayerActivity activity) {
+
+    public AudioPlayerListener(AudioPlayerActivityFragment activity) {
         this.activity = activity;
     }
 
-    public void setActivity(AudioPlayerActivity activity) {
+    public void startPlayerWorkers() {
+        if (trackTimesWorker == null && barWorker == null) {
+            trackTimesWorker = new TrackTimesWorker(activity);
+            trackTimes = new Thread(trackTimesWorker);
+            trackTimes.start();
+            barWorker = new SeekBarWorker(activity);
+            new Thread(barWorker).start();
+        }
+    }
+
+    public void setActivity(AudioPlayerActivityFragment activity) {
         this.activity = activity;
     }
+
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
         if (compoundButton.getId() == R.id.player_playButton) {
             if (checked && activity.getPlayer() != null && !activity.getPlayer().isPlaying()) {
-                barWorker = new SeekBarWorker(activity.getSeekBar(), activity);
-                new Thread(barWorker).start();
-                activity.runOnUiThread(new Runnable() {
+                activity.getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         activity.getPlayer().start();
                     }
                 });
-                trackTimesWorker = new TrackTimesWorker(activity);
-                trackTimes = new Thread(trackTimesWorker);
-                trackTimes.start();
+                killPlayerWorkers();
+                startPlayerWorkers();
             } else {
-                if (barWorker != null)
+                if (barWorker != null) {
                     barWorker.stop();
+                    barWorker = null;
+                }
+
                 if (activity.getPlayer() != null && activity.getPlayer().isPlaying())
-                    activity.runOnUiThread(new Runnable() {
+                    activity.getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             activity.getPlayer().pause();
@@ -65,7 +77,7 @@ public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListen
         }
         if (isUser && activity.getPlayer() != null) {
             trackTimes.interrupt();
-            activity.runOnUiThread(new Runnable() {
+            activity.getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     activity.getPlayer().seekTo(progress);
@@ -108,6 +120,7 @@ public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListen
 
         return false;
     }
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         boolean result = performPositionModification(v.getId(), event);
@@ -123,6 +136,10 @@ public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListen
         if (barWorker != null) {
             barWorker.stop();
             barWorker = null;
+        }
+        if (trackTimesWorker != null) {
+            trackTimesWorker.killMe();
+            trackTimesWorker = null;
         }
     }
 }

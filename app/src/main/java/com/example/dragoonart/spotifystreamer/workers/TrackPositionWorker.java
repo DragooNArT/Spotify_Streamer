@@ -2,7 +2,7 @@ package com.example.dragoonart.spotifystreamer.workers;
 
 import android.media.MediaPlayer;
 
-import com.example.dragoonart.spotifystreamer.AudioPlayerActivity;
+import com.example.dragoonart.spotifystreamer.AudioPlayerActivityFragment;
 import com.example.dragoonart.spotifystreamer.R;
 
 /**
@@ -11,11 +11,11 @@ import com.example.dragoonart.spotifystreamer.R;
 public class TrackPositionWorker implements Runnable {
 
     private boolean alive = true;
-    private AudioPlayerActivity activity;
+    private AudioPlayerActivityFragment activity;
     private boolean forward;
     private int iterations = 1;
 
-    public TrackPositionWorker(AudioPlayerActivity activity, int id) {
+    public TrackPositionWorker(AudioPlayerActivityFragment activity, int id) {
         forward = id == R.id.player_fastForward;
         this.activity=activity;
     }

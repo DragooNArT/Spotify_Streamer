@@ -1,10 +1,10 @@
 package com.example.dragoonart.spotifystreamer.listeners;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.example.dragoonart.spotifystreamer.ArtistTracksActivity;
 import com.example.dragoonart.spotifystreamer.AudioPlayerActivity;
 import com.example.dragoonart.spotifystreamer.beans.ArtistTrack;
 
@@ -15,10 +15,10 @@ import java.util.ArrayList;
  */
 public class TrackListClickListener implements AdapterView.OnItemClickListener {
 
-    private ArtistTracksActivity activity;
+    private Activity activity;
     private ArrayList<ArtistTrack> artistTracks;
 
-    public TrackListClickListener(ArtistTracksActivity activity, ArrayList<ArtistTrack> artistTracks) {
+    public TrackListClickListener(Activity activity, ArrayList<ArtistTrack> artistTracks) {
         this.activity = activity;
         this.artistTracks = artistTracks;
     }
