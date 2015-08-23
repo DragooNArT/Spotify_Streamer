@@ -50,6 +50,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
             if (fragment.getTrack() != null) {
                 outState.putParcelable(SAVED_ARTIST_TRACK_OBJECT_KEY, fragment.getTrack());
             }
+            if (fragment.getAllTracks() != null) {
+                outState.putParcelableArrayList(SAVED_ARTIST_ALL_TRACKS_OBJECT_KEY, fragment.getAllTracks());
+            }
             fragment.getPlayerListener().killPlayerWorkers();
         }
 

@@ -8,7 +8,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +32,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 
-public class AudioPlayerActivityFragment extends Fragment {
+public class AudioPlayerActivityFragment extends DialogFragment {
 
 
     private static Intent playerIntent;
@@ -241,11 +241,15 @@ public class AudioPlayerActivityFragment extends Fragment {
         this.currentPlayerTrack = currentPlayerTrack;
     }
 
-    public void setAllTracks(ArrayList<ArtistTrack> allTracks) {
-        this.allTracks = allTracks;
-    }
-
     public void setCurrentTrack(ArtistTrack currentTrack) {
         this.currentTrack = currentTrack;
+    }
+
+    public ArrayList<ArtistTrack> getAllTracks() {
+        return allTracks;
+    }
+
+    public void setAllTracks(ArrayList<ArtistTrack> allTracks) {
+        this.allTracks = allTracks;
     }
 }

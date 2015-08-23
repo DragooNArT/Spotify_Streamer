@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.dragoonart.spotifystreamer.beans.ArtistTrack;
 import com.example.dragoonart.spotifystreamer.beans.DiscoveredArtist;
+import com.example.dragoonart.spotifystreamer.beans.PlayerTrack;
 
 import java.util.ArrayList;
 
@@ -44,6 +45,16 @@ public class MainActivity extends AppCompatActivity {
                 fragment.renderList(artists);
             }
         }
+
+
+        AudioPlayerActivityFragment fragmentPlayer = (AudioPlayerActivityFragment) getSupportFragmentManager().findFragmentByTag("dialog");
+        if (fragmentPlayer != null) {
+            fragmentPlayer.setCurrentPlayerTrack(savedInstanceState.<PlayerTrack>getParcelable(AudioPlayerActivity.SAVED_PLAYER_TRACK_OBJECT_KEY));
+            fragmentPlayer.setCurrentTrack(savedInstanceState.<ArtistTrack>getParcelable(AudioPlayerActivity.SAVED_ARTIST_TRACK_OBJECT_KEY));
+
+            fragmentPlayer.setAllTracks(savedInstanceState.<ArtistTrack>getParcelableArrayList(AudioPlayerActivity.SAVED_ARTIST_ALL_TRACKS_OBJECT_KEY));
+
+        }
     }
 
     @Override
@@ -55,6 +66,22 @@ public class MainActivity extends AppCompatActivity {
         if (fragmentArtist != null) {
             outState.putParcelableArrayList(ArtistTracksActivityFragment.SAVED_DATA_KEY, fragmentArtist.getArtistTracks());
         }
+
+        AudioPlayerActivityFragment fragmentPlayer = (AudioPlayerActivityFragment) getSupportFragmentManager().findFragmentByTag("dialog");
+        if (fragmentPlayer != null) {
+            if (fragmentPlayer.getPlayerTrack() != null) {
+                outState.putParcelable(AudioPlayerActivity.SAVED_PLAYER_TRACK_OBJECT_KEY, fragmentPlayer.getPlayerTrack());
+            }
+            if (fragmentPlayer.getTrack() != null) {
+                outState.putParcelable(AudioPlayerActivity.SAVED_ARTIST_TRACK_OBJECT_KEY, fragmentPlayer.getTrack());
+            }
+            if (fragmentPlayer.getAllTracks() != null) {
+                outState.putParcelableArrayList(AudioPlayerActivity.SAVED_ARTIST_ALL_TRACKS_OBJECT_KEY, fragmentPlayer.getAllTracks());
+            }
+            fragmentPlayer.getPlayerListener().killPlayerWorkers();
+        }
+
+
         super.onSaveInstanceState(outState);
     }
 }

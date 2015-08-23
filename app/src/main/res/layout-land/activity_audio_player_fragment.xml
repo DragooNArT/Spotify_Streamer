@@ -20,17 +20,16 @@
         android:id="@+id/player_albumName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/player_artistName"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp" />
+        android:layout_alignEnd="@+id/player_timeRemaining"
+        android:layout_alignRight="@+id/player_timeRemaining"
+        android:layout_below="@+id/player_artistName" />
 
     <ImageView
         android:id="@+id/player_albumImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/player_albumName"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_below="@+id/player_artistName"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
         android:minHeight="300dp"
         android:minWidth="450dp" />
 
@@ -45,9 +44,8 @@
         android:id="@+id/player_seekBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/player_trackName"
+        android:layout_alignBottom="@+id/player_progressBar"
+        android:layout_centerHorizontal="true"
         android:minWidth="450dp" />
 
     <ToggleButton
@@ -57,7 +55,7 @@
         android:layout_alignBottom="@+id/player_fastForward"
         android:layout_below="@+id/player_seekBar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:drawableTop="@drawable/play_pause_selector"
         android:enabled="true"
         android:gravity="center"
@@ -72,11 +70,10 @@
         android:layout_below="@+id/player_seekBar"
         android:layout_gravity="center"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_toLeftOf="@+id/player_playButton"
         android:gravity="center"
         android:src="@android:drawable/ic_media_rew" />
-
 
 
     <Chronometer
@@ -86,8 +83,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/player_seekBar"
-        android:layout_toLeftOf="@+id/player_rewind"
-        android:layout_toStartOf="@+id/player_rewind"
+        android:layout_toLeftOf="@+id/player_previousTrack"
+        android:layout_toStartOf="@+id/player_previousTrack"
         android:ems="10"
         android:inputType="time" />
 
@@ -96,16 +93,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/player_timeElapsed"
-        android:layout_toEndOf="@+id/player_fastForward"
-        android:layout_toRightOf="@+id/player_fastForward"
+        android:layout_toEndOf="@+id/player_nextTrack"
+        android:layout_toRightOf="@+id/player_nextTrack"
         android:ems="10"
         android:inputType="time"
         android:text="0:00" />
 
     <ImageButton
         android:id="@+id/player_previousTrack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignTop="@+id/player_rewind"
         android:layout_gravity="center"
         android:layout_marginRight="10dp"
@@ -120,7 +117,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/player_seekBar"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_toEndOf="@+id/player_playButton"
         android:layout_toRightOf="@+id/player_playButton"
         android:gravity="center"
@@ -133,7 +130,7 @@
         android:layout_below="@+id/player_seekBar"
         android:layout_gravity="center"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_toEndOf="@+id/player_fastForward"
         android:layout_toRightOf="@+id/player_fastForward"
         android:gravity="center"
