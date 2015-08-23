@@ -46,8 +46,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/player_trackName"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:minWidth="450dp" />
 
     <ToggleButton
@@ -86,6 +90,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/player_seekBar"
+        android:layout_marginLeft="30dp"
         android:layout_toLeftOf="@+id/player_rewind"
         android:layout_toStartOf="@+id/player_rewind"
         android:ems="10"
@@ -96,9 +101,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/player_timeElapsed"
-        android:layout_toEndOf="@+id/player_fastForward"
-        android:layout_toRightOf="@+id/player_fastForward"
-        android:ems="10"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="false"
+        android:layout_marginRight="30dp"
         android:inputType="time"
         android:text="0:00" />
 
