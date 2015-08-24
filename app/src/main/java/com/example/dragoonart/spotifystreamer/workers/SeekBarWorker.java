@@ -29,6 +29,7 @@ public class SeekBarWorker implements Runnable {
                 });
 
                 try {
+                    if (player != null && player.isPlaying() && player.getDuration() > 0)
                     Thread.sleep(player.getDuration() / 200);
                 } catch (InterruptedException e) {
                     //recalculate immediately

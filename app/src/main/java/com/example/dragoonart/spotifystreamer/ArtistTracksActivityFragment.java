@@ -54,6 +54,7 @@ public class ArtistTracksActivityFragment extends Fragment {
         return view;
     }
 
+
     public View findViewById(int id) {
         return view.findViewById(id);
     }

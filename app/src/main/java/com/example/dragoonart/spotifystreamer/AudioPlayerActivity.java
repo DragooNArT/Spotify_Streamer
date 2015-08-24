@@ -23,23 +23,44 @@ public class AudioPlayerActivity extends AppCompatActivity {
     public static final String SAVED_ARTIST_TRACK_OBJECT_KEY = "com.example.dragoonart.spotifystreamer.beans.ArtistTrack";
     private Intent mShareIntent;
     private AudioPlayerActivityFragment fragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (fragment != null) {
+            return;
+        }
         setContentView(R.layout.activity_audio_player);
-        fragment = new AudioPlayerActivityFragment();
+        fragment = (AudioPlayerActivityFragment) getSupportFragmentManager().findFragmentById(R.id.player_activity_container);
+        boolean shouldAdd = false;
+        if (fragment == null) {
+            shouldAdd = true;
+            fragment = new AudioPlayerActivityFragment();
+        }
         ArrayList<ArtistTrack> allTracks = getIntent().getParcelableArrayListExtra(SAVED_ARTIST_ALL_TRACKS_OBJECT_KEY);
-        fragment.setAllTracks(allTracks);
-        fragment.setCurrentTrack(allTracks.get(getIntent().getIntExtra(SAVED_ARTIST_TRACK_OBJECT_KEY, 0)));
+        if (allTracks != null) {
+            fragment.setAllTracks(allTracks);
+            fragment.setCurrentTrack(allTracks.get(getIntent().getIntExtra(SAVED_ARTIST_TRACK_OBJECT_KEY, 0)));
+        }
         if (savedInstanceState != null && savedInstanceState.containsKey(SAVED_PLAYER_TRACK_OBJECT_KEY)) {
             fragment.setCurrentPlayerTrack((PlayerTrack) savedInstanceState.getParcelable(SAVED_PLAYER_TRACK_OBJECT_KEY));
         }
 
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.player_activity_container, fragment)
-                .commit();
+
+        if (shouldAdd) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.player_activity_container, fragment)
+                    .commit();
+        }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (fragment != null && fragment.getPlayer() != null && fragment.getPlayer().isPlaying() && fragment.getPlayerListener() != null) {
+            fragment.getPlayerListener().startPlayerWorkers();
+        }
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -55,10 +76,6 @@ public class AudioPlayerActivity extends AppCompatActivity {
             }
             fragment.getPlayerListener().killPlayerWorkers();
         }
-
-        getSupportFragmentManager().beginTransaction()
-                .remove(fragment)
-                .commit();
         super.onSaveInstanceState(outState);
     }
 

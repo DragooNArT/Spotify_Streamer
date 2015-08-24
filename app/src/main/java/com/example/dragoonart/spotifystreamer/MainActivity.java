@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String SAVED_DATA_KEY = "SEARCH_DATA";
     private MainActivityFragment fragment;
+    private AudioPlayerActivityFragment fragmentPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-
-        AudioPlayerActivityFragment fragmentPlayer = (AudioPlayerActivityFragment) getSupportFragmentManager().findFragmentByTag("dialog");
+        fragmentPlayer = (AudioPlayerActivityFragment) getSupportFragmentManager().findFragmentByTag("dialog");
         if (fragmentPlayer != null) {
             fragmentPlayer.setCurrentPlayerTrack(savedInstanceState.<PlayerTrack>getParcelable(AudioPlayerActivity.SAVED_PLAYER_TRACK_OBJECT_KEY));
             fragmentPlayer.setCurrentTrack(savedInstanceState.<ArtistTrack>getParcelable(AudioPlayerActivity.SAVED_ARTIST_TRACK_OBJECT_KEY));
@@ -58,10 +58,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onResume() {
+        fragmentPlayer = (AudioPlayerActivityFragment) getSupportFragmentManager().findFragmentByTag("dialog");
+        if (fragmentPlayer != null && fragmentPlayer.getPlayer() != null && fragmentPlayer.getPlayer().isPlaying() && fragmentPlayer.getPlayerListener() != null) {
+            fragmentPlayer.getPlayerListener().startPlayerWorkers();
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    public void saveState(Bundle outState) {
         if (fragment != null && fragment.getArtists() != null) {
             outState.putSerializable(SAVED_DATA_KEY, fragment.getArtists());
         }
+
         ArtistTracksActivityFragment fragmentArtist = (ArtistTracksActivityFragment) getSupportFragmentManager().findFragmentById(R.id.tablet_trackListContainer);
         if (fragmentArtist != null) {
             outState.putParcelableArrayList(ArtistTracksActivityFragment.SAVED_DATA_KEY, fragmentArtist.getArtistTracks());
@@ -78,10 +92,14 @@ public class MainActivity extends AppCompatActivity {
             if (fragmentPlayer.getAllTracks() != null) {
                 outState.putParcelableArrayList(AudioPlayerActivity.SAVED_ARTIST_ALL_TRACKS_OBJECT_KEY, fragmentPlayer.getAllTracks());
             }
+            fragmentPlayer.unbindPlayerService(this);
             fragmentPlayer.getPlayerListener().killPlayerWorkers();
         }
+    }
 
-
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        saveState(outState);
         super.onSaveInstanceState(outState);
     }
 }
