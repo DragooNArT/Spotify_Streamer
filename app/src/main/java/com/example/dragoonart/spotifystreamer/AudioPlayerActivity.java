@@ -57,7 +57,7 @@ public class AudioPlayerActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (fragment != null && fragment.getPlayer() != null && fragment.getPlayer().isPlaying() && fragment.getPlayerListener() != null) {
+        if (fragment != null && fragment.getPlayerService() != null && fragment.getPlayerService().isPlayerPlaying() && fragment.getPlayerListener() != null) {
             fragment.getPlayerListener().startPlayerWorkers();
         }
     }

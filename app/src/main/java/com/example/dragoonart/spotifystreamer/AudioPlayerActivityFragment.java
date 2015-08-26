@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
@@ -40,9 +39,9 @@ public class AudioPlayerActivityFragment extends DialogFragment {
     private PlayerTrack currentPlayerTrack;
     private AudioPlayerListener listener;
     private AudioPlayerViewListener viewListener;
-    private MediaPlayer player;
     private boolean isRegistered = false;
     private boolean doContinue = false;
+    private PlayerService playerService;
     private View view;
     //connect to the service
     private ServiceConnection playerConnection = new ServiceConnection() {
@@ -52,7 +51,7 @@ public class AudioPlayerActivityFragment extends DialogFragment {
             PlayerService.LocalBinder binder = (PlayerService.LocalBinder) service;
             //set the player
             binder.setActivity(AudioPlayerActivityFragment.this);
-            player = binder.getService().preparePlayer(playerIntent, doContinue);
+            playerService = binder.getService().preparePlayer(playerIntent, doContinue);
             doContinue = false;
             isRegistered = true;
 
@@ -60,7 +59,6 @@ public class AudioPlayerActivityFragment extends DialogFragment {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            player = null;
             isRegistered = false;
         }
     };
@@ -68,10 +66,6 @@ public class AudioPlayerActivityFragment extends DialogFragment {
     public AudioPlayerActivityFragment() {
         listener = new AudioPlayerListener(this);
         viewListener = new AudioPlayerViewListener(this);
-    }
-
-    public MediaPlayer getPlayer() {
-        return player;
     }
 
     public AudioPlayerListener getPlayerListener() {
@@ -91,22 +85,25 @@ public class AudioPlayerActivityFragment extends DialogFragment {
             }
         } else {
             if (currentTrack != null) {
+                togglePlayerControls(false);
                 FetchTrack fetchTrack = new FetchTrack(currentTrack.getTrackId(), this);
                 fetchTrack.execute();
             }
         }
-        setPlayerData();
+        if (currentTrack != null) {
+            setPlayerData();
+        }
         return view;
     }
 
-    public void startPlayingMusic() {
-        if (player != null && !player.isPlaying() && view != null) {
-            ToggleButton playButton = (ToggleButton) findViewById(R.id.player_playButton);
-
-            playButton.setChecked(true);
-            player.start();
-        }
-    }
+    //   public void startPlayingMusic() {
+    //     if (player != null && !player.isPlaying() && view != null) {
+    //          ToggleButton playButton = (ToggleButton) findViewById(R.id.player_playButton);
+//
+    //         playButton.setChecked(true);
+    //         player.start();
+    //      }
+    //  }
 
     private void setPlayerData() {
 
@@ -295,5 +292,9 @@ public class AudioPlayerActivityFragment extends DialogFragment {
 
     public void setAllTracks(ArrayList<ArtistTrack> allTracks) {
         this.allTracks = allTracks;
+    }
+
+    public PlayerService getPlayerService() {
+        return playerService;
     }
 }

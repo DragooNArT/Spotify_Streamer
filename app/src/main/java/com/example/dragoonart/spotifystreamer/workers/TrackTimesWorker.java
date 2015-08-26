@@ -25,20 +25,21 @@ public class TrackTimesWorker implements Runnable {
     public void run() {
         final DateFormat formatter = new SimpleDateFormat("mm:ss");
 
-        while (alive && activity.getPlayer() != null && activity.getPlayer().isPlaying()) {
-
-            final Chronometer elapsed = (Chronometer) activity.findViewById(R.id.player_timeElapsed);
-            final Chronometer remaining = (Chronometer) activity.findViewById(R.id.player_timeRemaining);
-            final Date elapsedDate = new Date(activity.getPlayer().getCurrentPosition());
-            final Date remainingDate = new Date(activity.getPlayer().getDuration() - activity.getPlayer().getCurrentPosition());
-            if (activity != null && activity.getActivity() != null) {
-                activity.getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        elapsed.setText(formatter.format(elapsedDate));
-                        remaining.setText(formatter.format(remainingDate));
-                    }
-                });
+        while (alive) {
+            if (activity.getPlayerService() != null) {
+                final Chronometer elapsed = (Chronometer) activity.findViewById(R.id.player_timeElapsed);
+                final Chronometer remaining = (Chronometer) activity.findViewById(R.id.player_timeRemaining);
+                final Date elapsedDate = new Date(activity.getPlayerService().getCurrentPosition());
+                final Date remainingDate = new Date(activity.getPlayerService().getDuration() - activity.getPlayerService().getCurrentPosition());
+                if (activity != null && activity.getActivity() != null) {
+                    activity.getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            elapsed.setText(formatter.format(elapsedDate));
+                            remaining.setText(formatter.format(remainingDate));
+                        }
+                    });
+                }
 
                 try {
                     Thread.sleep(1000);

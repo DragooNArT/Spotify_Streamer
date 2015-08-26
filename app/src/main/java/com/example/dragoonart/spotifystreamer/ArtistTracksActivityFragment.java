@@ -73,13 +73,13 @@ public class ArtistTracksActivityFragment extends Fragment {
     /**
      * fill artist tracks list with items from spotify
      *
-     * @param tracks
+     * @param tracks - top 10 tracks for artist
      */
     public void renderList(ArrayList<ArtistTrack> tracks) {
         this.artistTracks = tracks;
         ListView trackList = (ListView) findViewById(R.id.artist_tracks_list);
-        if (tracks == null) {
-            ListViewHelper.displayEmptyList(trackList, "No Tracks found? Hmm....");
+        if (tracks == null || tracks.isEmpty()) {
+            ListViewHelper.displayEmptyList(trackList, "No tracks found for " + artist.getName() + ".\nPlease refine you search.");
         } else {
             ArtistTrackView trackView = new ArtistTrackView(getActivity(), tracks.toArray(new ArtistTrack[tracks.size()]));
             trackList.setAdapter(trackView);

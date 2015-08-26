@@ -1,7 +1,5 @@
 package com.example.dragoonart.spotifystreamer.workers;
 
-import android.media.MediaPlayer;
-
 import com.example.dragoonart.spotifystreamer.AudioPlayerActivityFragment;
 import com.example.dragoonart.spotifystreamer.R;
 
@@ -21,11 +19,11 @@ public class TrackPositionWorker implements Runnable {
     }
 
     private boolean playerIsAlive() {
-        return alive && activity.getPlayer() != null;
+        return alive && activity.getPlayerService() != null;
     }
 
-    private int getIncrement(MediaPlayer player) {
-        int num = (player.getDuration()/200 ) * ((iterations/20) +1);
+    private int getIncrement() {
+        int num = (activity.getPlayerService().getDuration() / 200) * ((iterations / 20) + 1);
 
 
                return num;
@@ -35,11 +33,10 @@ public class TrackPositionWorker implements Runnable {
     public void run() {
 
         while(playerIsAlive()) {
-            MediaPlayer player = activity.getPlayer();
             if(forward) {
-                player.seekTo(player.getCurrentPosition() + getIncrement(player));
+                activity.getPlayerService().playerSeekTo(activity.getPlayerService().getCurrentPosition() + getIncrement());
             } else {
-                player.seekTo(player.getCurrentPosition() - getIncrement(player));
+                activity.getPlayerService().playerSeekTo(activity.getPlayerService().getCurrentPosition() - getIncrement());
             }
             try {
                 Thread.sleep(100);

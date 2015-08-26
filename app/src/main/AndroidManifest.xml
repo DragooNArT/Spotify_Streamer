@@ -38,7 +38,8 @@
 
         <service
             android:name=".services.PlayerService"
-            android:enabled="true" />
+            android:enabled="true"
+            android:stopWithTask="false" />
     </application>
 
 </manifest>

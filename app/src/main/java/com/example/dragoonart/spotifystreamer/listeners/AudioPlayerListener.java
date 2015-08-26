@@ -44,11 +44,12 @@ public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListen
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
         if (compoundButton.getId() == R.id.player_playButton) {
-            if (checked && activity.getPlayer() != null && !activity.getPlayer().isPlaying()) {
+            if (checked && activity.getPlayerService() != null) {
                 activity.getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        activity.getPlayer().start();
+
+                        activity.getPlayerService().playerStart();
                     }
                 });
                 killPlayerWorkers();
@@ -59,11 +60,11 @@ public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListen
                     barWorker = null;
                 }
 
-                if (activity.getPlayer() != null && activity.getPlayer().isPlaying())
+                if (activity.getPlayerService() != null && activity.getPlayerService().isPlayerPlaying())
                     activity.getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            activity.getPlayer().pause();
+                            activity.getPlayerService().playerPause();
                         }
                     });
             }
@@ -72,15 +73,15 @@ public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListen
 
     @Override
     public void onProgressChanged(SeekBar seekBar, final int progress, boolean isUser) {
-        if (seekBar.getProgress() >= seekBar.getMax() || activity.getPlayer() == null || !activity.getPlayer().isPlaying()) {
+        if (seekBar.getProgress() >= seekBar.getMax() || activity.getPlayerService() != null && !activity.getPlayerService().isPlayerPlaying()) {
             activity.togglePlayButton(false);
         }
-        if (isUser && activity.getPlayer() != null) {
+        if (isUser && activity.getPlayerService() != null) {
             trackTimes.interrupt();
             activity.getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    activity.getPlayer().seekTo(progress);
+                    activity.getPlayerService().playerSeekTo(progress);
                 }
             });
 
@@ -123,9 +124,7 @@ public class AudioPlayerListener implements CompoundButton.OnCheckedChangeListen
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        boolean result = performPositionModification(v.getId(), event);
-
-        return result;
+        return performPositionModification(v.getId(), event);
     }
 
     public void killPlayerWorkers() {

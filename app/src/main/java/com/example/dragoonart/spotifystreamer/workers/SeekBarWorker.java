@@ -1,7 +1,5 @@
 package com.example.dragoonart.spotifystreamer.workers;
 
-import android.media.MediaPlayer;
-
 import com.example.dragoonart.spotifystreamer.AudioPlayerActivityFragment;
 
 public class SeekBarWorker implements Runnable {
@@ -16,21 +14,17 @@ public class SeekBarWorker implements Runnable {
     public void run() {
 
         while (run) {
-            final MediaPlayer player = activity.getPlayer();
-            if (activity.getSeekBar().getProgress() == player.getCurrentPosition() && !player.isPlaying()) {
-                activity.getSeekBar().setProgress(activity.getSeekBar().getMax());
-            }
             if (activity != null && activity.getActivity() != null) {
                 activity.getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        activity.getSeekBar().setProgress(player.getCurrentPosition());
+                        activity.getSeekBar().setProgress(activity.getPlayerService().getCurrentPosition());
                     }
                 });
 
                 try {
-                    if (player != null && player.isPlaying() && player.getDuration() > 0)
-                    Thread.sleep(player.getDuration() / 200);
+                    if (activity.getPlayerService() != null && activity.getPlayerService().isPlayerPlaying() && activity.getPlayerService().getDuration() > 0)
+                        Thread.sleep(activity.getPlayerService().getDuration() / 200);
                 } catch (InterruptedException e) {
                     //recalculate immediately
                 }

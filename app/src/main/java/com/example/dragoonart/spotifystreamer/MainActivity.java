@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (findViewById(R.id.tablet_masterpane) == null) {
             if (savedInstanceState != null) {
-                ArrayList<DiscoveredArtist> artists = (ArrayList<DiscoveredArtist>) savedInstanceState.getSerializable(SAVED_DATA_KEY);
+                ArrayList<DiscoveredArtist> artists = savedInstanceState.getParcelableArrayList(SAVED_DATA_KEY);
                 fragment.setArtists(artists);
             }
             getSupportFragmentManager().beginTransaction()
@@ -42,13 +42,13 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         } else {
             if (savedInstanceState != null) {
-                ArrayList<DiscoveredArtist> artists = (ArrayList<DiscoveredArtist>) savedInstanceState.getSerializable(SAVED_DATA_KEY);
+                ArrayList<DiscoveredArtist> artists = savedInstanceState.getParcelableArrayList(SAVED_DATA_KEY);
                 fragment.renderList(artists);
             }
         }
 
         fragmentPlayer = (AudioPlayerActivityFragment) getSupportFragmentManager().findFragmentByTag("dialog");
-        if (fragmentPlayer != null) {
+        if (fragmentPlayer != null && savedInstanceState != null) {
             fragmentPlayer.setCurrentPlayerTrack(savedInstanceState.<PlayerTrack>getParcelable(AudioPlayerActivity.SAVED_PLAYER_TRACK_OBJECT_KEY));
             fragmentPlayer.setCurrentTrack(savedInstanceState.<ArtistTrack>getParcelable(AudioPlayerActivity.SAVED_ARTIST_TRACK_OBJECT_KEY));
 
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         fragmentPlayer = (AudioPlayerActivityFragment) getSupportFragmentManager().findFragmentByTag("dialog");
-        if (fragmentPlayer != null && fragmentPlayer.getPlayer() != null && fragmentPlayer.getPlayer().isPlaying() && fragmentPlayer.getPlayerListener() != null) {
+        if (fragmentPlayer != null && fragmentPlayer.getPlayerService() != null && fragmentPlayer.getPlayerService().isPlayerPlaying() && fragmentPlayer.getPlayerListener() != null) {
             fragmentPlayer.getPlayerListener().startPlayerWorkers();
         }
         super.onResume();
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void saveState(Bundle outState) {
         if (fragment != null && fragment.getArtists() != null) {
-            outState.putSerializable(SAVED_DATA_KEY, fragment.getArtists());
+            outState.putParcelableArrayList(SAVED_DATA_KEY, fragment.getArtists());
         }
 
         ArtistTracksActivityFragment fragmentArtist = (ArtistTracksActivityFragment) getSupportFragmentManager().findFragmentById(R.id.tablet_trackListContainer);

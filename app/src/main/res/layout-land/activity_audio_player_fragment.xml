@@ -149,6 +149,7 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/player_trackName"
         android:layout_toEndOf="@+id/player_nextTrack"
-        android:layout_toRightOf="@+id/player_nextTrack" />
+        android:layout_toRightOf="@+id/player_nextTrack"
+        android:visibility="invisible" />
 
 </RelativeLayout>
