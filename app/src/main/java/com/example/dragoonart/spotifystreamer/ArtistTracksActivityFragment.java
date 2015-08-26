@@ -25,10 +25,6 @@ public class ArtistTracksActivityFragment extends Fragment {
     private DiscoveredArtist artist = null;
     private View view;
 
-    public void setArtist(DiscoveredArtist artist) {
-        this.artist = artist;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -54,7 +50,6 @@ public class ArtistTracksActivityFragment extends Fragment {
         return view;
     }
 
-
     public View findViewById(int id) {
         return view.findViewById(id);
     }
@@ -68,7 +63,6 @@ public class ArtistTracksActivityFragment extends Fragment {
 
         }
     }
-
 
     /**
      * fill artist tracks list with items from spotify
@@ -89,12 +83,19 @@ public class ArtistTracksActivityFragment extends Fragment {
         }
     }
 
-
     public ArrayList<ArtistTrack> getArtistTracks() {
         return artistTracks;
     }
 
     public void setTracks(ArrayList<ArtistTrack> tracks) {
         this.artistTracks = tracks;
+    }
+
+    public DiscoveredArtist getArtist() {
+        return artist;
+    }
+
+    public void setArtist(DiscoveredArtist artist) {
+        this.artist = artist;
     }
 }

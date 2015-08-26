@@ -72,6 +72,7 @@ public class AudioPlayerActivityFragment extends DialogFragment {
         return listener;
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +83,7 @@ public class AudioPlayerActivityFragment extends DialogFragment {
             doContinue = true;
             if (getActivity() != null && !isRegistered) {
                 getActivity().bindService(playerIntent, playerConnection, Context.BIND_AUTO_CREATE);
+                isRegistered = true;
             }
         } else {
             if (currentTrack != null) {
@@ -95,15 +97,6 @@ public class AudioPlayerActivityFragment extends DialogFragment {
         }
         return view;
     }
-
-    //   public void startPlayingMusic() {
-    //     if (player != null && !player.isPlaying() && view != null) {
-    //          ToggleButton playButton = (ToggleButton) findViewById(R.id.player_playButton);
-//
-    //         playButton.setChecked(true);
-    //         player.start();
-    //      }
-    //  }
 
     private void setPlayerData() {
 
@@ -206,6 +199,7 @@ public class AudioPlayerActivityFragment extends DialogFragment {
             playerIntent.putExtra(PlayerService.DATA_SOURCE_URI, previewUrl);
             if (getActivity() != null && !isRegistered) {
                 getActivity().bindService(playerIntent, playerConnection, Context.BIND_AUTO_CREATE);
+                isRegistered = true;
             }
         }
     }
@@ -266,7 +260,7 @@ public class AudioPlayerActivityFragment extends DialogFragment {
         return currentTrack;
     }
 
-    public ServiceConnection unbindPlayerService(FragmentActivity activity) {
+    public void unbindPlayerService(FragmentActivity activity) {
         if (isRegistered) {
             if (activity != null) {
                 activity.unbindService(playerConnection);
@@ -275,7 +269,6 @@ public class AudioPlayerActivityFragment extends DialogFragment {
             }
             isRegistered = false;
         }
-        return null;
     }
 
     public void setCurrentPlayerTrack(PlayerTrack currentPlayerTrack) {

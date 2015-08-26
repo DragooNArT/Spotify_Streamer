@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         }
         ArtistTracksActivityFragment fragmentArtist = (ArtistTracksActivityFragment) getSupportFragmentManager().findFragmentById(R.id.tablet_trackListContainer);
         if (fragmentArtist != null) {
+            fragmentArtist.setArtist(savedInstanceState.<DiscoveredArtist>getParcelable(ArtistTracksActivityFragment.SAVED_ARTIST_OBJECT_KEY));
             fragmentArtist.setTracks(savedInstanceState.<ArtistTrack>getParcelableArrayList(ArtistTracksActivityFragment.SAVED_DATA_KEY));
         }
 
@@ -58,6 +59,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (fragmentPlayer != null) {
+            fragmentPlayer.unbindPlayerService(this);
+            System.out.println("Unbound service");
+            fragmentPlayer = null;
+        }
+        fragment = null;
+    }
+
+    @Override
     protected void onResume() {
         fragmentPlayer = (AudioPlayerActivityFragment) getSupportFragmentManager().findFragmentByTag("dialog");
         if (fragmentPlayer != null && fragmentPlayer.getPlayerService() != null && fragmentPlayer.getPlayerService().isPlayerPlaying() && fragmentPlayer.getPlayerListener() != null) {
@@ -77,7 +89,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         ArtistTracksActivityFragment fragmentArtist = (ArtistTracksActivityFragment) getSupportFragmentManager().findFragmentById(R.id.tablet_trackListContainer);
+
         if (fragmentArtist != null) {
+            outState.putParcelable(ArtistTracksActivityFragment.SAVED_ARTIST_OBJECT_KEY, fragmentArtist.getArtist());
             outState.putParcelableArrayList(ArtistTracksActivityFragment.SAVED_DATA_KEY, fragmentArtist.getArtistTracks());
         }
 
